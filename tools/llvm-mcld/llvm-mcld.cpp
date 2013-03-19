@@ -799,6 +799,23 @@ ArgTextSegAddr("Ttext",
                cl::init(-1U));
 
 //===----------------------------------------------------------------------===//
+// Ignored GCC Compatibility Options
+//===----------------------------------------------------------------------===//
+static cl::opt<bool>
+Arguse_gold("use-gold",
+          cl::desc("GCC/collect2 compatibility: uses ld.gold.  Ignored"),
+          cl::init(false));
+
+static cl::opt<bool>
+Arguse_mcld("use-mcld",
+          cl::desc("GCC/collect2 compatibility: uses ld.mcld.  Ignored"),
+          cl::init(false));
+
+static cl::opt<bool>
+Arguse_ld("use-ld",
+          cl::desc("GCC/collect2 compatibility: uses ld.bfd.  Ignored"),
+          cl::init(false));
+
 // non-member functions
 //===----------------------------------------------------------------------===//
 /// GetOutputStream - get the output stream.
