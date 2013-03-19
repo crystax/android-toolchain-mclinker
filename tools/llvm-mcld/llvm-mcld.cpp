@@ -590,8 +590,12 @@ ArgExcludeLIBS("exclude-libs",
                cl::desc("Exclude libraries from automatic export"),
                cl::value_desc("lib1,lib2,..."));
 
+static cl::opt<bool>
+ArgBuildIDDefault("build-id",
+           cl::desc("Request creation of \".note.gnu.build-id\" ELF note section in sha1."));
+
 static cl::opt<std::string>
-ArgBuildID("build-id",
+ArgBuildID("build-id=",
            cl::desc("Request creation of \".note.gnu.build-id\" ELF note section."),
            cl::value_desc("style"));
 
