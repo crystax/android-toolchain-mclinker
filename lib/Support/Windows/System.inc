@@ -16,6 +16,11 @@
 namespace mcld{
 namespace sys{
 
+char *strerror(int errnum)
+{
+  return strerror(errnum);
+}
+
 std::string getDefaultTargetTriple()
 {
   return MCLD_DEFAULT_TARGET_TRIPLE;

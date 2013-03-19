@@ -28,7 +28,7 @@ namespace mcld {
 namespace sys  {
 namespace fs   {
 
-#if defined(MCLD_ON_WIN32)
+#if defined(MCLD_ON_WIN32) && !defined(__MINGW32__)
 const wchar_t preferred_separator = L'\\';
 const wchar_t separator = L'\\';
 const wchar_t colon = L':';
@@ -50,7 +50,7 @@ const char    dot = L'.';
 class Path
 {
 public:
-#if defined(MCLD_ON_WIN32)
+#if defined(MCLD_ON_WIN32) && !defined(__MINGW32__)
   typedef wchar_t                            ValueType;
   typedef std::wstring                       StringType;
 #else
@@ -93,7 +93,9 @@ public:
   { return m_PathName.c_str(); }
 
   std::string string() const;
+#if !defined(__MINGW32__)
   std::wstring wstring() const;
+#endif
 
   // -----  decomposition  ----- //
   Path parent_path() const;

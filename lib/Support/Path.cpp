@@ -23,7 +23,7 @@ using namespace mcld::sys::fs;
 // Helper
 //===--------------------------------------------------------------------===//
 namespace {
-#if defined(MCLD_ON_WIN32)
+#if defined(MCLD_ON_WIN32) && !defined(__MINGW32__)
 bool is_separator(wchar_t value)
 {
   return (value == separator || value == preferred_separator);
@@ -104,7 +104,7 @@ Path& Path::append(const Path& pPath)
     unsigned int new_size = old_size + pPath.native().size();
 
     m_PathName.resize(new_size);
-#if defined(MCLD_ON_WIN32)
+#if defined(MCLD_ON_WIN32) && !defined(__MINGW32__)
     wcscpy(const_cast<ValueType*>(m_PathName.data()+old_size), pPath.native().data());
 #else
     strcpy(const_cast<ValueType*>(m_PathName.data()+old_size), pPath.native().data());

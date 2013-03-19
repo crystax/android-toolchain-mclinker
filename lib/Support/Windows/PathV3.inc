@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 #include <mcld/Support/Path.h>
 #include <mcld/Support/Directory.h>
-#include <Windows.h>
+#include <windows.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <limits.h>
@@ -30,10 +30,12 @@ std::string Path::string() const
   return result;
 }
 
+#if !defined(__MINGW32__)
 std::wstring Path::wstring() const
 {
   return m_PathName;
 }
+#endif
 
 //===----------------------------------------------------------------------===//
 // mcld::sys::fs::detail
@@ -150,7 +152,11 @@ bool not_found_error(int perrno)
 void status(const Path& p, FileStatus& pFileStatus)
 {
   struct ::_stat path_stat;
+#if !defined(__MINGW32__)
   if(::_wstat(p.c_str(), &path_stat)!= 0)
+#else
+  if(::_stat(p.c_str(), &path_stat)!= 0)
+#endif
   {
     if(not_found_error(errno))
     {
@@ -200,8 +206,13 @@ void close_dir(Directory& pDir)
 
 void get_pwd(Path& pPWD)
 {
-  wchar_t* pwd = (wchar_t*)malloc(PATH_MAX);
+#if !defined(__MINGW32__)
+  wchar_t* pwd = (wchar_t*)malloc(PATH_MAX*sizeof(wchar_t));
   pPWD.assign(_wgetcwd(pwd, PATH_MAX));
+#else
+  char* pwd = (char*)malloc(PATH_MAX);
+  pPWD.assign(pwd);
+#endif
   free(pwd);
 }
 

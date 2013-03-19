@@ -37,6 +37,10 @@
 #include <mcld/LD/StubFactory.h>
 #include <mcld/Object/ObjectBuilder.h>
 
+#if defined(_WIN32)
+  #define bzero(b,l) (memset((b), 0, (l)), (void)0)
+#endif
+
 using namespace mcld;
 
 //===--------------------------------------------------------------------===//

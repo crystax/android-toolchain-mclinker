@@ -24,7 +24,7 @@ bool is_symlink(FileStatus f)
   return f.type() == SymlinkFile;
 }
 
-#if defined(MCLD_ON_WIN32)
+#if defined(MCLD_ON_WIN32) && !defined(__MINGW32__)
 const Path dot_path(L".");
 const Path dot_dot_path(L"..");
 
