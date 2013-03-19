@@ -23,8 +23,7 @@ static bool MCLDEmulateX86ELF(LinkerConfig& pConfig)
   unsigned int bitclass;
   Triple::ArchType arch = pConfig.targets().triple().getArch();
   assert (arch == Triple::x86 || arch == Triple::x86_64);
-  if (arch == Triple::x86 ||
-      pConfig.targets().triple().getEnvironment() == Triple::GNUX32) {
+  if (arch == Triple::x86) {
     bitclass = 32;
   }
   else {

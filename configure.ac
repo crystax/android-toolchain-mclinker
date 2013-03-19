@@ -101,7 +101,7 @@ AC_CHECK_HEADERS([sys/mman.h])
 
 ####################
 # Configure LLVM
-CHECK_LLVM([3.3])
+CHECK_LLVM([3.2])
 ENUM_MCLD_TARGETS
 CHECK_ALONE_TARGET
 
