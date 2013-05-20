@@ -69,6 +69,8 @@ AC_DEFUN([CHECK_LLVM],
 	LLVM_LDFLAGS="${LLVM_LDFLAGS} `${LLVM_CONFIG_BIN} --ldflags`"
 	LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/\n//g'`"
 	LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lgtest_main -lgtest//g'`"
+	# Android bionic doesn't need -lpthread
+	LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lpthread//g'`"
 	
 	AC_SUBST(LLVM_CFLAGS)
 	AC_SUBST(LLVM_CPPFLAGS)
