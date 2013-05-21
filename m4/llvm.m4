@@ -69,8 +69,6 @@ AC_DEFUN([CHECK_LLVM],
 	LLVM_LDFLAGS="${LLVM_LDFLAGS} `${LLVM_CONFIG_BIN} --ldflags`"
 	LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/\n//g'`"
 	LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lgtest_main -lgtest//g'`"
-	# Android bionic doesn't need -lpthread
-	LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lpthread//g'`"
 	
 	AC_SUBST(LLVM_CFLAGS)
 	AC_SUBST(LLVM_CPPFLAGS)
@@ -113,6 +111,11 @@ AC_DEFUN([CHECK_LLVM],
 			*-*-interix*)
 				llvm_cv_os_type="Interix"
 				llvm_cv_platform_type="Unix" ;;
+			*-*-linux-android*)
+				llvm_cv_os_type="Linux"
+				llvm_cv_platform_type="Unix"
+				# Android bionic doesn't need -lpthread.  Pthread stuff in -lc instead.
+				LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lpthread//g'`" ;;
 			*-*-linux*)
 				llvm_cv_os_type="Linux"
 				llvm_cv_platform_type="Unix" ;;
