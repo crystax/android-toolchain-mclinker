@@ -45,6 +45,12 @@ AH_TEMPLATE([MCLD_VERSION], [MCLINKER version])
 
 ####################
 #  Languages
+if test "$build_alias" != "$host_alias"; then
+  # To reduce binary size
+  CFLAGS="-Os -ffunction-sections -fdata-sections -fvisibility=hidden"
+  CXXFLAGS="-Os -ffunction-sections -fdata-sections -fvisibility=hidden"
+  LDFLAGS="-Wl,--gc-sections"
+fi
 AC_PROG_CC
 AC_PROG_CXX
 
