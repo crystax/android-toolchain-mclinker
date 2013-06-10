@@ -77,14 +77,14 @@ AC_DEFUN([CHECK_LLVM],
 	LLVM_CFLAGS="`${LLVM_CONFIG_BIN} --cflags`"
 	LLVM_CPPFLAGS="`${LLVM_CONFIG_BIN} --cxxflags`"
 	LLVM_LDFLAGS="`${LLVM_CONFIG_BIN} --libs`"
-	LLVM_LDFLAGS="${LLVM_LDFLAGS} `${LLVM_CONFIG_BIN} --ldflags`"
-	LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/\n//g'`"
-	LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lgtest_main -lgtest//g'`"
-	
 	if test -n "${LLVM_SHARED_LIB}" -a -f "${LLVM_SHARED_LIB}"; then
 		# Use libLLVM.so instead of lots libLLVM*.a
 		LLVM_LDFLAGS="${LLVM_SHARED_LIB} `${LLVM_CONFIG_BIN} --ldflags`"
+	else
+		LLVM_LDFLAGS="${LLVM_LDFLAGS} `${LLVM_CONFIG_BIN} --ldflags`"
 	fi
+	LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/\n//g'`"
+	LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lgtest_main -lgtest//g'`"
 
 	AC_SUBST(LLVM_CFLAGS)
 	AC_SUBST(LLVM_CPPFLAGS)
@@ -131,7 +131,9 @@ AC_DEFUN([CHECK_LLVM],
 				llvm_cv_os_type="Linux"
 				llvm_cv_platform_type="Unix"
 				# Android bionic doesn't need -lpthread.  Pthread stuff in -lc instead.
-				LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lpthread//g'`" ;;
+				# Likewise for -lrt.
+				LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lpthread//g'`"
+				LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lrt//g'`" ;;
 			*-*-linux*)
 				llvm_cv_os_type="Linux"
 				llvm_cv_platform_type="Unix" ;;
