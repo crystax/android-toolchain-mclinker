@@ -13,7 +13,7 @@ m4_include(m4/acx_pthread.m4)
 #  Autoconf/Automake Initialization
 
 dnl AC_INIT(PKG_NAME, BUILD_VERSION, BUG_REPORTER)
-AC_INIT([MCLinker],[WhiteStone],[mclinker@googlegroups.com])
+AC_INIT([MCLinker],[Cilai],[mclinker@googlegroups.com])
 AC_PREREQ(2.59)
 
 AC_CONFIG_SRCDIR([./COPYING])
@@ -31,10 +31,10 @@ AM_INIT_AUTOMAKE([1.9 dist-bzip2 foreign])
 ####################
 #  Versioning, see VERSION
 MAJOR=2
-MINOR=3
-MICRO=1
-AGE=1
-BUILD=WhiteStone
+MINOR=4
+MICRO=0
+AGE=0
+BUILD=Cilai
 
 DEV_VERSION=$MAJOR.$MINOR.$MICRO.$AGE-$BUILD
 PKG_VERSION=$MAJOR.$MINOR.$MICRO-$BUILD
@@ -53,6 +53,12 @@ if test "$build_alias" != "$host_alias"; then
 fi
 AC_PROG_CC
 AC_PROG_CXX
+
+AC_PATH_PROG([FLEX],[flex])
+AX_PROG_FLEX_VERSION([2.5.35],[],[AC_MSG_ERROR([Require flex 2.5.35 or later])])
+AC_PATH_PROG([BISON],[bison])
+AX_PROG_BISON_VERSION([2.4.3],[],[AC_MSG_ERROR([Require bison 2.4.3 or later])])
+
 AC_LANG([C++])
 LT_INIT
 

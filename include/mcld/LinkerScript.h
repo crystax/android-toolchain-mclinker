@@ -12,14 +12,18 @@
 #include <gtest.h>
 #endif
 #include <string>
+#include <vector>
 #include <llvm/ADT/StringRef.h>
 #include <mcld/ADT/StringEntry.h>
 #include <mcld/ADT/StringHash.h>
 #include <mcld/ADT/HashTable.h>
 #include <mcld/Object/SectionMap.h>
 #include <mcld/MC/SearchDirs.h>
+#include <mcld/Script/Assignment.h>
 
 namespace mcld {
+
+class LDSymbol;
 
 /** \class LinkerScript
  *
@@ -35,9 +39,20 @@ public:
                     hash::StringHash<hash::ELF>,
                     StringEntryFactory<uint64_t> > AddressMap;
 
-  typedef HashTable<StringEntry<llvm::StringRef>,
-                    hash::StringHash<hash::ELF>,
-                    StringEntryFactory<llvm::StringRef> > DefSymMap;
+  typedef std::vector<std::pair<LDSymbol*, Assignment> > Assignments;
+
+  class DefSyms {
+  public:
+    void append(const std::string& pDefSym)
+    {
+      m_DefSymList.append(pDefSym).append(";");
+    }
+    const std::string& data() const { return m_DefSymList; }
+    std::string&       data()       { return m_DefSymList; }
+
+  private:
+    std::string m_DefSymList;
+  };
 
 public:
   LinkerScript();
@@ -53,8 +68,12 @@ public:
   const SectionMap& sectionMap() const { return m_SectionMap; }
   SectionMap&       sectionMap()       { return m_SectionMap; }
 
-  const DefSymMap& defSymMap() const { return m_DefSymMap; }
-  DefSymMap&       defSymMap()       { return m_DefSymMap; }
+  const Assignments& assignments() const { return m_Assignments; }
+  Assignments&       assignments()       { return m_Assignments; }
+
+  // --defsym
+  const DefSyms& defSyms() const { return m_DefSyms; }
+  DefSyms&       defSyms()       { return m_DefSyms; }
 
   /// search directory
   const SearchDirs& directories() const { return m_SearchDirs; }
@@ -67,12 +86,21 @@ public:
 
   bool hasSysroot() const;
 
+  /// entry point
+  const std::string& entry() const;
+
+  void setEntry(const std::string& pEntry);
+
+  bool hasEntry() const;
+
 private:
   SymbolRenameMap m_SymbolRenames;
   AddressMap m_AddressMap;
   SectionMap m_SectionMap;
-  DefSymMap m_DefSymMap;
+  Assignments m_Assignments;
+  DefSyms m_DefSyms;
   SearchDirs m_SearchDirs;
+  std::string m_Entry;
 };
 
 } // namespace of mcld

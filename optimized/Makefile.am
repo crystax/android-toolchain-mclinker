@@ -10,6 +10,10 @@ AM_CXXFLAGS = \
 	@NO_COVERED_SWITCH_DEFAULT@ \
 	@NO_C99_EXTENSIONS@
 
+BUILT_SOURCES = ScriptParser.cc
+AM_YFLAGS = -d
+AM_LFLAGS = -olex.yy.c
+
 HEADER = ${INCDIR}/ADT/Uncopyable.h \
 	${INCDIR}/ADT/TypeTraits.h \
 	${INCDIR}/ADT/SizeTraits.h \
@@ -54,7 +58,6 @@ HEADER = ${INCDIR}/ADT/Uncopyable.h \
 	${INCDIR}/Support/TargetSelect.h \
 	${INCDIR}/Support/raw_ostream.h \
 	${INCDIR}/Support/MsgHandling.h \
-	${INCDIR}/Support/DefSymParser.h \
 	${INCDIR}/CodeGen/MCLinker.h \
 	${INCDIR}/Object/ObjectLinker.h \
 	${INCDIR}/Object/ObjectBuilder.h \
@@ -130,6 +133,7 @@ HEADER = ${INCDIR}/ADT/Uncopyable.h \
 	${INCDIR}/LD/DiagRelocations.inc \
 	${INCDIR}/LD/DiagLayouts.inc \
 	${INCDIR}/LD/DiagGOTPLT.inc \
+	${INCDIR}/LD/DiagLDScript.inc \
 	${INCDIR}/LD/LDContext.h \
 	${INCDIR}/LD/Archive.h \
 	${INCDIR}/LD/BranchIsland.h \
@@ -171,7 +175,6 @@ SOURCE = ${LIBDIR}/ADT/StringEntry.cpp \
 	${LIBDIR}/Support/TargetRegistry.cpp \
 	${LIBDIR}/Support/raw_ostream.cpp \
 	${LIBDIR}/Support/MsgHandling.cpp \
-	${LIBDIR}/Support/DefSymParser.cpp \
 	${LIBDIR}/Support/Unix/FileSystem.inc \
 	${LIBDIR}/Support/Unix/PathV3.inc \
 	${LIBDIR}/Support/Unix/System.inc \
@@ -318,10 +321,17 @@ SOURCE = ${LIBDIR}/ADT/StringEntry.cpp \
 	${LIBDIR}/Target/Mips/MipsELFDynamic.h \
 	${LIBDIR}/Target/Mips/MipsELFDynamic.cpp \
 	${LIBDIR}/Target/Mips/MipsGNUInfo.h \
+	${LIBDIR}/Target/Mips/MipsGNUInfo.cpp \
 	${LIBDIR}/Target/Mips/MipsLDBackend.h \
 	${LIBDIR}/Target/Mips/MipsLDBackend.cpp \
 	${LIBDIR}/Target/Mips/MipsGOT.h \
 	${LIBDIR}/Target/Mips/MipsGOT.cpp \
+	${LIBDIR}/Target/Mips/MipsGOTPLT.h \
+	${LIBDIR}/Target/Mips/MipsGOTPLT.cpp \
+	${LIBDIR}/Target/Mips/MipsPLT.h \
+	${LIBDIR}/Target/Mips/MipsPLT.cpp \
+	${LIBDIR}/Target/Mips/MipsLA25Stub.h \
+	${LIBDIR}/Target/Mips/MipsLA25Stub.cpp \
 	${LIBDIR}/Target/Mips/MipsTargetMachine.h \
 	${LIBDIR}/Target/Mips/MipsTargetMachine.cpp \
 	${LIBDIR}/Target/Mips/MipsRelocationFunctions.h \
@@ -384,19 +394,61 @@ SOURCE = ${LIBDIR}/ADT/StringEntry.cpp \
 	${LIBDIR}/Target/Hexagon/HexagonAbsoluteStub.h \
 	${LIBDIR}/Target/Hexagon/TargetInfo/HexagonTargetInfo.cpp
 
+LINKERSCRIPT_HEADER = \
+	${INCDIR}/Script/ScriptCommand.h \
+	${INCDIR}/Script/ScriptInput.h \
+	${INCDIR}/Script/EntryCmd.h \
+	${INCDIR}/Script/OutputFormatCmd.h \
+	${INCDIR}/Script/GroupCmd.h \
+	${INCDIR}/Script/SearchDirCmd.h \
+	${INCDIR}/Script/OutputArchCmd.h \
+	${INCDIR}/Script/Assignment.h \
+	${INCDIR}/Script/ExprToken.h \
+	${INCDIR}/Script/Operator.h \
+	${INCDIR}/Script/UnaryOp.h \
+	${INCDIR}/Script/BinaryOp.h \
+	${INCDIR}/Script/TernaryOp.h \
+	${INCDIR}/Script/Operand.h \
+	${INCDIR}/Script/RpnExpr.h \
+	${INCDIR}/Script/RpnEvaluator.h \
+	${INCDIR}/Script/ScriptFile.h \
+	${INCDIR}/Script/FlexLexer.h \
+	${INCDIR}/Script/ScriptScanner.h \
+	${INCDIR}/Script/ScriptReader.h
+
+LINKERSCRIPT_SOURCE = \
+	${LIBDIR}/Script/ScriptInput.cpp \
+	${LIBDIR}/Script/EntryCmd.cpp \
+	${LIBDIR}/Script/OutputFormatCmd.cpp \
+	${LIBDIR}/Script/GroupCmd.cpp \
+	${LIBDIR}/Script/SearchDirCmd.cpp \
+	${LIBDIR}/Script/OutputArchCmd.cpp \
+	${LIBDIR}/Script/Assignment.cpp \
+	${LIBDIR}/Script/Operator.cpp \
+	${LIBDIR}/Script/UnaryOp.cpp \
+	${LIBDIR}/Script/BinaryOp.cpp \
+	${LIBDIR}/Script/TernaryOp.cpp \
+	${LIBDIR}/Script/Operand.cpp \
+	${LIBDIR}/Script/RpnExpr.cpp \
+	${LIBDIR}/Script/RpnEvaluator.cpp \
+	${LIBDIR}/Script/ScriptFile.cpp \
+	${LIBDIR}/Script/ScriptParser.yy \
+	${LIBDIR}/Script/ScriptScanner.ll \
+	${LIBDIR}/Script/ScriptReader.cpp
+
 ANDROID_CPPFLAGS=-fno-rtti -fno-exceptions -Waddress -Wchar-subscripts -Wcomment -Wformat -Wparentheses -Wreorder -Wreturn-type -Wsequence-point -Wstrict-aliasing -Wstrict-overflow=1 -Wswitch -Wtrigraphs -Wuninitialized -Wunknown-pragmas -Wunused-function -Wunused-label -Wunused-value -Wunused-variable -Wvolatile-register-var
 
 if ENABLE_WERROR
 ANDROID_CPPFLAGS+=-Werror
 endif
 
-AM_CPPFLAGS = -g -I$(TOPLEVEL)/include -I$(BUILDTOP)/include ${LLVM_CPPFLAGS} ${ANDROID_CPPFLAGS}
+AM_CPPFLAGS = -g -I$(TOPLEVEL)/include -I$(BUILDTOP)/include ${LLVM_CPPFLAGS} ${ANDROID_CPPFLAGS} -I$(INCDIR)/Script
 
 lib_LIBRARIES= libmcld.a
 
-libmcld_a_SOURCES = ${SOURCE}
+libmcld_a_SOURCES = ${SOURCE} ${LINKERSCRIPT_SOURCE}
 
-nobase_include_HEADERS = ${HEADER}
+nobase_include_HEADERS = ${HEADER} ${LINKERSCRIPT_HEADER}
 
 bin_PROGRAMS = ld.mcld
 

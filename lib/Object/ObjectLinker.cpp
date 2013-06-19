@@ -24,10 +24,14 @@
 #include <mcld/LD/ResolveInfo.h>
 #include <mcld/LD/RelocData.h>
 #include <mcld/LD/Relocator.h>
+#include <mcld/Script/ScriptFile.h>
+#include <mcld/Script/ScriptReader.h>
+#include <mcld/Script/Assignment.h>
+#include <mcld/Script/Operand.h>
+#include <mcld/Script/RpnEvaluator.h>
 #include <mcld/Support/RealPath.h>
 #include <mcld/Support/MemoryArea.h>
 #include <mcld/Support/MsgHandling.h>
-#include <mcld/Support/DefSymParser.h>
 #include <mcld/Target/TargetLDBackend.h>
 #include <mcld/Fragment/FragmentLinker.h>
 #include <mcld/Object/ObjectBuilder.h>
@@ -49,6 +53,7 @@ ObjectLinker::ObjectLinker(const LinkerConfig& pConfig,
     m_pArchiveReader(NULL),
     m_pGroupReader(NULL),
     m_pBinaryReader(NULL),
+    m_pScriptReader(NULL),
     m_pWriter(NULL) {
 }
 
@@ -60,6 +65,7 @@ ObjectLinker::~ObjectLinker()
   delete m_pArchiveReader;
   delete m_pGroupReader;
   delete m_pBinaryReader;
+  delete m_pScriptReader;
   delete m_pWriter;
 }
 
@@ -93,10 +99,20 @@ bool ObjectLinker::initFragmentLinker()
   m_pBinaryReader  = m_LDBackend.createBinaryReader(*m_pBuilder);
   m_pGroupReader   = new GroupReader(*m_pModule, *m_pObjectReader,
                          *m_pDynObjReader, *m_pArchiveReader, *m_pBinaryReader);
+  m_pScriptReader  = new ScriptReader(*m_pGroupReader);
   m_pWriter        = m_LDBackend.createWriter();
 
   // initialize Relocator
   m_LDBackend.initRelocator();
+
+  // TODO: process the default linker script from -T option.
+  // process --defsym option
+  ScriptFile defsym(ScriptFile::Expression, "--defsym",
+                    m_pModule->getScript().defSyms().data(),
+                    m_pBuilder->getInputBuilder());
+  if (getScriptReader()->readScript(m_Config, m_pModule->getScript(), defsym)) {
+    defsym.activate();
+  }
   return true;
 }
 
@@ -122,7 +138,8 @@ void ObjectLinker::normalize()
   for (input = m_pModule->input_begin(); input!=inEnd; ++input) {
     // is a group node
     if (isGroup(input)) {
-      getGroupReader()->readGroup(input, m_pBuilder->getInputBuilder(), m_Config);
+      getGroupReader()->readGroup(input, inEnd, m_pBuilder->getInputBuilder(),
+                                  m_Config);
       continue;
     }
 
@@ -171,12 +188,28 @@ void ObjectLinker::normalize()
       getArchiveReader()->readArchive(archive);
       if(archive.numOfObjectMember() > 0) {
         m_pModule->getInputTree().merge<InputTree::Inclusive>(input,
-                                                            archive.inputs());
+                                                              archive.inputs());
       }
     }
     else {
-      fatal(diag::err_unrecognized_input_file) << (*input)->path()
-                                          << m_Config.targets().triple().str();
+      // try to parse input as a linker script
+      if (getScriptReader()->isMyFormat(**input)) {
+        ScriptFile script(ScriptFile::LDScript, **input,
+                          m_pBuilder->getInputBuilder());
+        if (getScriptReader()->readScript(m_Config, m_pModule->getScript(),
+                                          script)) {
+          (*input)->setType(Input::Script);
+          script.activate();
+          if (script.inputs().size() > 0) {
+            m_pModule->getInputTree().merge<InputTree::Inclusive>(input,
+              script.inputs());
+          }
+        }
+        else {
+          fatal(diag::err_unrecognized_input_file) << (*input)->path()
+            << m_Config.targets().triple().str();
+        }
+      }
     }
   } // end of for
 }
@@ -331,40 +364,62 @@ bool ObjectLinker::addTargetSymbols()
 /// scripts.
 bool ObjectLinker::addScriptSymbols()
 {
-  const LinkerScript& script = m_pModule->getScript();
-  LinkerScript::DefSymMap::const_entry_iterator it;
-  LinkerScript::DefSymMap::const_entry_iterator ie = script.defSymMap().end();
-  // go through the entire defSymMap
-  for (it = script.defSymMap().begin(); it != ie; ++it) {
-    const llvm::StringRef sym =  it.getEntry()->key();
-    ResolveInfo* old_info = m_pModule->getNamePool().findInfo(sym);
+  LinkerScript& script = m_pModule->getScript();
+  LinkerScript::Assignments::iterator it, ie = script.assignments().end();
+  // go through the entire symbol assignments
+  for (it = script.assignments().begin(); it != ie; ++it) {
+    LDSymbol* symbol = NULL;
+    const llvm::StringRef symName =  (*it).second.symbol().strVal();
+    ResolveInfo::Type       type = ResolveInfo::NoType;
+    ResolveInfo::Visibility vis  = ResolveInfo::Default;
+    size_t size = 0;
+    ResolveInfo* old_info = m_pModule->getNamePool().findInfo(symName);
     // if the symbol does not exist, we can set type to NOTYPE
     // else we retain its type, same goes for size - 0 or retain old value
     // and visibility - Default or retain
     if (old_info != NULL) {
-      if(!m_pBuilder->AddSymbol<IRBuilder::Force, IRBuilder::Unresolve>(
-                             sym,
-                             static_cast<ResolveInfo::Type>(old_info->type()),
-                             ResolveInfo::Define,
-                             ResolveInfo::Absolute,
-                             old_info->size(),
-                             0x0,
-                             FragmentRef::Null(),
-                             old_info->visibility()))
-        return false;
+      type = static_cast<ResolveInfo::Type>(old_info->type());
+      vis = old_info->visibility();
+      size = old_info->size();
     }
-    else {
-      if (!m_pBuilder->AddSymbol<IRBuilder::Force, IRBuilder::Unresolve>(
-                             sym,
-                             ResolveInfo::NoType,
-                             ResolveInfo::Define,
-                             ResolveInfo::Absolute,
-                             0x0,
-                             0x0,
-                             FragmentRef::Null(),
-                             ResolveInfo::Default))
-        return false;
+
+    // Add symbol and refine the visibility if needed
+    // FIXME: bfd linker would change the binding instead, but currently
+    //        ABS is also a kind of Binding in ResolveInfo.
+    switch ((*it).second.type()) {
+    case Assignment::HIDDEN:
+      vis = ResolveInfo::Hidden;
+      // Fall through
+    case Assignment::DEFAULT:
+      symbol =
+        m_pBuilder->AddSymbol<IRBuilder::Force,
+                              IRBuilder::Unresolve>(symName,
+                                                    type,
+                                                    ResolveInfo::Define,
+                                                    ResolveInfo::Absolute,
+                                                    size,
+                                                    0x0,
+                                                    FragmentRef::Null(),
+                                                    vis);
+      break;
+    case Assignment::PROVIDE_HIDDEN:
+      vis = ResolveInfo::Hidden;
+      // Fall through
+    case Assignment::PROVIDE:
+      symbol =
+        m_pBuilder->AddSymbol<IRBuilder::AsReferred,
+                              IRBuilder::Unresolve>(symName,
+                                                    type,
+                                                    ResolveInfo::Define,
+                                                    ResolveInfo::Absolute,
+                                                    size,
+                                                    0x0,
+                                                    FragmentRef::Null(),
+                                                    vis);
+      break;
     }
+    // Set symbol of this assignment.
+    (*it).first = symbol;
   }
   return true;
 }
@@ -486,20 +541,19 @@ bool ObjectLinker::finalizeSymbolValue()
   bool scriptSymsAdded = true;
   uint64_t symVal;
   const LinkerScript& script = m_pModule->getScript();
-  LinkerScript::DefSymMap::const_entry_iterator it;
-  LinkerScript::DefSymMap::const_entry_iterator ie = script.defSymMap().end();
+  LinkerScript::Assignments::const_iterator it;
+  LinkerScript::Assignments::const_iterator ie = script.assignments().end();
+  // go through the entire symbol assignments
 
-  DefSymParser parser(*m_pModule);
-  for (it = script.defSymMap().begin(); it != ie; ++it) {
-    llvm::StringRef symName =  it.getEntry()->key();
-    llvm::StringRef expr =  it.getEntry()->value();
+  RpnEvaluator evaluator(*m_pModule);
+  for (it = script.assignments().begin(); it != ie; ++it) {
+    if ((*it).first == NULL)
+      continue;
 
-    LDSymbol* symbol = m_pModule->getNamePool().findSymbol(symName);
-    assert(NULL != symbol && "--defsym symbol should be in the name pool");
-    scriptSymsAdded &= parser.parse(expr, symVal);
+    scriptSymsAdded &= evaluator.eval((*it).second.getRpnExpr(), symVal);
     if (!scriptSymsAdded)
       break;
-    symbol->setValue(symVal);
+    (*it).first->setValue(symVal);
   }
   return finalized && scriptSymsAdded ;
 }

@@ -851,6 +851,11 @@ ArgTextSegAddr("Ttext",
                cl::desc("Set the address of the text segment"),
                cl::init(-1U));
 
+static cl::alias
+ArgTextSegAddrAlias("Ttext-segment",
+                    cl::desc("alias for -Ttext"),
+                    cl::aliasopt(ArgTextSegAddr));
+
 //===----------------------------------------------------------------------===//
 // non-member functions
 //===----------------------------------------------------------------------===//
@@ -1112,7 +1117,6 @@ static bool ProcessLinkerOptionsFromCommand(mcld::LinkerScript& pScript,
   pConfig.options().setVerbose(ArgVerbose);
   pConfig.options().setMaxErrorNum(ArgMaxErrorNum);
   pConfig.options().setMaxWarnNum(ArgMaxWarnNum);
-  pConfig.options().setEntry(ArgEntry);
   pConfig.options().setBsymbolic(ArgBsymbolic);
   pConfig.options().setBgroup(ArgBgroup);
   pConfig.options().setDyld(ArgDyld);
@@ -1139,6 +1143,9 @@ static bool ProcessLinkerOptionsFromCommand(mcld::LinkerScript& pScript,
     pConfig.options().setStripSymbols(mcld::GeneralOptions::StripTemporaries);
   else
     pConfig.options().setStripSymbols(mcld::GeneralOptions::KeepAllSymbols);
+
+  // set up entry point from -e
+  pScript.setEntry(ArgEntry);
 
   // set up rename map, for --wrap
   cl::list<std::string>::iterator wname;
@@ -1241,7 +1248,7 @@ static bool ProcessLinkerOptionsFromCommand(mcld::LinkerScript& pScript,
   }
   // --section-start SECTION=ADDRESS
   for (cl::list<std::string>::iterator
-         it = ArgAddressMapList.begin(), ie = ArgAddressMapList.end();
+       it = ArgAddressMapList.begin(), ie = ArgAddressMapList.end();
        it != ie; ++it) {
     // FIXME: Add a cl::parser
     size_t pos = (*it).find_last_of('=');
@@ -1258,23 +1265,7 @@ static bool ProcessLinkerOptionsFromCommand(mcld::LinkerScript& pScript,
   for (cl::list<std::string>::iterator
        it = ArgDefSymList.begin(), ie = ArgDefSymList.end();
        it != ie ; ++it) {
-    llvm::StringRef expression(*it);
-    size_t pos = expression.find_last_of('=');
-    if (pos == expression.size() - 1) {
-      errs() << "defsym option: expression must not end with '='\n";
-      return false;
-    }
-    if (llvm::StringRef::npos == pos) {
-      errs() << "syntax : --defsym symbol=expression\n";
-      return false;
-    }
-    bool exist = false;
-    // FIXME: This will not work with multiple destinations such as
-    // --defsym abc=pqr=expression
-
-    mcld::StringEntry<llvm::StringRef> *defsyms =
-                    pScript.defSymMap().insert(expression.substr(0,pos),exist);
-    defsyms->setValue(expression.substr(pos + 1));
+    pScript.defSyms().append(*it);
   }
 
   // set up filter/aux filter for shared object
