@@ -534,11 +534,13 @@ ArgGPSize("G",
 /// @}
 static cl::opt<bool>
 ArgGCSections("gc-sections",
+              cl::ZeroOrMore,
               cl::desc("Enable garbage collection of unused input sections."),
               cl::init(false));
 
 static cl::opt<bool>
 ArgNoGCSections("no-gc-sections",
+              cl::ZeroOrMore,
               cl::desc("disable garbage collection of unused input sections."),
               cl::init(false));
 
