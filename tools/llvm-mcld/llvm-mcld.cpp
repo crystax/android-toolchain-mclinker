@@ -364,6 +364,7 @@ ArgAllowMulDefs("allow-multiple-definition",
 
 static cl::opt<bool>
 ArgEhFrameHdr("eh-frame-hdr",
+              cl::ZeroOrMore,
               cl::desc("Request creation of \".eh_frame_hdr\" section and ELF \"PT_GNU_EH_FRAME\" segment header."),
               cl::init(false));
 
