@@ -9,6 +9,7 @@
 ####################
 #  m4 includes
 m4_include(m4/acx_pthread.m4)
+m4_include(m4/link_options.m4)
 ####################
 #  Autoconf/Automake Initialization
 
@@ -43,16 +44,37 @@ AC_SUBST(MCLD_VERSION)
 AC_DEFINE_UNQUOTED([MCLD_VERSION], ["$MCLD_VERSION"])
 AH_TEMPLATE([MCLD_VERSION], [MCLINKER version])
 
-####################
-#  Languages
-if test "$build_alias" != "$host_alias"; then
-  # To reduce binary size
-  CFLAGS="-Os -ffunction-sections -fdata-sections -fvisibility=hidden"
-  CXXFLAGS="-Os -ffunction-sections -fdata-sections -fvisibility=hidden"
-  LDFLAGS="-Wl,--gc-sections"
-fi
 AC_PROG_CC
 AC_PROG_CXX
+
+####################
+#  --enable-shrink-binary-size : check whether they want to shrink mclinker size:
+AC_ARG_ENABLE(shrink-binary-size, AS_HELP_STRING(
+ --enable-shrink-binary-size,[Shrink mclinker size (default is NO)]),,enableval="no")
+
+if test ${enableval} = "no" ; then
+  AC_SUBST(ENABLE_SHRINK_BINARY_SIZE,[0])
+else
+  AC_SUBST(ENABLE_SHRINK_BINARY_SIZE,[1])
+fi
+
+if test "$ENABLE_SHRINK_BINARY_SIZE" = "1"; then
+    ####################
+    #  Compiler flags for binary size reduction
+    AC_MSG_CHECKING([binary size reduction compiler flags])
+    CXX_FLAG_CHECK(DATA_SECTIONS, [-fdata-sections])
+    CXX_FLAG_CHECK(FUNCTION_SECTIONS, [-ffunction-sections])
+    CXX_FLAG_CHECK(VISIBILITY_INLINES_HIDDEN, [-fvisibility-inlines-hidden])
+    CFLAGS="-Os $CFLAGS $DATA_SECTIONS $FUNCTION_SECTIONS $VISIBILITY_INLINES_HIDDEN"
+    CXXFLAGS="-Os $CXXFLAGS $DATA_SECTIONS $FUNCTION_SECTIONS $VISIBILITY_INLINES_HIDDEN"
+
+    ####################
+    #  Linker flags for binary size reduction
+    #  (cooperative with -ffunction-sections, -fdata-sections)
+    AC_MSG_CHECKING([binary size reduction linker flags])
+    AC_LINK_USE_GC_SECTIONS([GC_SECTIONS])
+    LDFLAGS="$LDFLAGS $GC_SECTIONS"
+fi
 
 AC_PATH_PROG([FLEX],[flex])
 AX_PROG_FLEX_VERSION([2.5.35],[],[AC_MSG_ERROR([Require flex 2.5.35 or later])])
