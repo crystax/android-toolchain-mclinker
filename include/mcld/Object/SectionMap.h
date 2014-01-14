@@ -6,8 +6,8 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef MCLD_SECTION_MAP_H
-#define MCLD_SECTION_MAP_H
+#ifndef MCLD_OBJECT_SECTIONMAP_H
+#define MCLD_OBJECT_SECTIONMAP_H
 #ifdef ENABLE_UNITTEST
 #include <gtest.h>
 #endif
@@ -36,7 +36,7 @@ public:
     typedef DotAssignments::const_iterator const_dot_iterator;
     typedef DotAssignments::iterator dot_iterator;
 
-    Input(const std::string& pName);
+    Input(const std::string& pName, InputSectDesc::KeepPolicy pPolicy);
     Input(const InputSectDesc& pInputDesc);
 
     InputSectDesc::KeepPolicy policy() const { return m_Policy; }
@@ -79,8 +79,10 @@ public:
     const std::string& name() const { return m_Name; }
 
     const OutputSectDesc::Prolog& prolog() const { return m_Prolog; }
+    OutputSectDesc::Prolog&       prolog()       { return m_Prolog; }
 
     const OutputSectDesc::Epilog& epilog() const { return m_Epilog; }
+    OutputSectDesc::Epilog&       epilog()       { return m_Epilog; }
 
     size_t order() const { return m_Order; }
 
@@ -115,6 +117,12 @@ public:
     dot_iterator       dot_begin()       { return m_DotAssignments.begin(); }
     const_dot_iterator dot_end  () const { return m_DotAssignments.end(); }
     dot_iterator       dot_end  ()       { return m_DotAssignments.end(); }
+
+    const_dot_iterator find_first_explicit_dot() const;
+    dot_iterator       find_first_explicit_dot();
+
+    const_dot_iterator find_last_explicit_dot() const;
+    dot_iterator       find_last_explicit_dot();
 
     const DotAssignments& dotAssignments() const { return m_DotAssignments; }
     DotAssignments&       dotAssignments()       { return m_DotAssignments; }
@@ -160,7 +168,9 @@ public:
   iterator       find(const std::string& pOutputSection);
 
   std::pair<mapping, bool>
-  insert(const std::string& pInputSection, const std::string& pOutputSection);
+  insert(const std::string& pInputSection,
+         const std::string& pOutputSection,
+         InputSectDesc::KeepPolicy pPolicy = InputSectDesc::NoKeep);
   std::pair<mapping, bool>
   insert(const InputSectDesc& pInputDesc, const OutputSectDesc& pOutputDesc);
 
@@ -184,10 +194,15 @@ public:
 
   iterator insert(iterator pPosition, LDSection* pSection);
 
+  // fixupDotSymbols - ensure the dot assignments are valid
+  void fixupDotSymbols();
+
 private:
   bool matched(const Input& pInput,
                const std::string& pInputFile,
                const std::string& pInputSection) const;
+
+  bool matched(const WildcardPattern& pPattern, const std::string& pName) const;
 
 private:
   OutputDescList m_OutputDescList;

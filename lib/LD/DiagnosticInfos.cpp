@@ -42,6 +42,7 @@ public:
 static const DiagStaticInfo DiagCommonInfo[] = {
 #define DIAG(ENUM, CLASS, ADDRDESC, LOCDESC) \
   { diag::ENUM, CLASS, STR_SIZE(ADDRDESC, uint16_t), ADDRDESC },
+#include "mcld/LD/DiagAttribute.inc"
 #include "mcld/LD/DiagCommonKinds.inc"
 #include "mcld/LD/DiagReaders.inc"
 #include "mcld/LD/DiagSymbolResolutions.inc"
@@ -59,6 +60,8 @@ static const unsigned int DiagCommonInfoSize =
 static const DiagStaticInfo DiagLoCInfo[] = {
 #define DIAG(ENUM, CLASS, ADDRDESC, LOCDESC) \
   { diag::ENUM, CLASS, STR_SIZE(LOCDESC, uint16_t), LOCDESC },
+#include "mcld/LD/DiagAttribute.inc"
+#include "mcld/LD/DiagCommonKinds.inc"
 #include "mcld/LD/DiagReaders.inc"
 #include "mcld/LD/DiagSymbolResolutions.inc"
 #include "mcld/LD/DiagRelocations.inc"
@@ -121,7 +124,8 @@ bool DiagnosticInfos::process(DiagnosticEngine& pEngine) const
       }
       break;
     }
-    case diag::undefined_reference: {
+    case diag::undefined_reference:
+    case diag::undefined_reference_text: {
       // we have not implement --unresolved-symbols=method yet. So far, MCLinker
       // provides the easier --allow-shlib-undefined and --no-undefined (i.e. -z defs)
       switch(m_Config.codeGenType()) {

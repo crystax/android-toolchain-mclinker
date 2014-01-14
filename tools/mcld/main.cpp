@@ -527,6 +527,23 @@ ArgGPSize("G",
           cl::desc("Set the maximum size of objects to be optimized using GP"),
           cl::init(8));
 
+static bool ArgGenUnwindInfo;
+
+static cl::opt<bool, true, cl::FalseParser>
+ArgNoGenUnwindInfoFlag("no-ld-generated-unwind-info",
+                       cl::ZeroOrMore, cl::location(ArgGenUnwindInfo),
+                       cl::desc("Don't create unwind info for linker generated"
+                                " sections to save size"),
+                       cl::init(false),
+                       cl::ValueDisallowed);
+static cl::opt<bool, true>
+ArgGenUnwindInfoFlag("ld-generated-unwind-info",
+                     cl::ZeroOrMore, cl::location(ArgGenUnwindInfo),
+                     cl::desc("Request creation of unwind info for linker"
+                              " generated code sections like PLT."),
+                     cl::init(true),
+                     cl::ValueDisallowed);
+/// @{
 /// @{
 /// @name FIXME: begin of unsupported options
 /// @}
@@ -584,7 +601,8 @@ static cl::opt<std::string>
 ArgEmulation("m",
              cl::ZeroOrMore,
              cl::desc("Set GNU linker emulation"),
-             cl::value_desc("emulation"));
+             cl::value_desc("emulation"),
+             cl::Prefix);
 
 static cl::list<std::string, bool, llvm::cl::SearchDirParser>
 ArgRuntimePathLink("rpath-link",
@@ -707,13 +725,14 @@ ArgARMCompatibility("p",
                     cl::desc("Ignore for ARM backward compatibility"),
                     cl::init(false));
 
+/// @{
+/// @name FIXME: end of unsupported options
+/// @}
+
 static cl::opt<bool>
 ArgNoWarnMismatch("no-warn-mismatch",
                   cl::desc("Allow linking together mismatched input files."),
                   cl::init(false));
-/// @{
-/// @name FIXME: end of unsupported options
-/// @}
 
 static cl::opt<bool>
 ArgNoStdlib("nostdlib",
@@ -967,11 +986,11 @@ static mcld::ToolOutputFile *GetOutputStream(const char* pTargetName,
 
   // Open the file.
   mcld::ToolOutputFile* result_output =
-                      new mcld::ToolOutputFile(pOutputFilename,
-                                                 mcld::FileHandle::ReadWrite |
-                                                 mcld::FileHandle::Create |
-                                                 mcld::FileHandle::Truncate,
-                                               permission);
+    new mcld::ToolOutputFile(pOutputFilename,
+                             mcld::FileHandle::ReadWrite |
+                               mcld::FileHandle::Create |
+                               mcld::FileHandle::Truncate,
+                             permission);
 
   return result_output;
 }
@@ -1079,6 +1098,8 @@ static bool ProcessLinkerOptionsFromCommand(mcld::LinkerScript& pScript,
     pConfig.options().getScriptList().push_back(*sp);
   }
 
+  pConfig.options().setGenUnwindInfo(ArgGenUnwindInfo);
+
   // --fatal-warnings
   // pConfig.options().setFatalWarnings(ArgFatalWarnings);
 
@@ -1143,7 +1164,12 @@ static bool ProcessLinkerOptionsFromCommand(mcld::LinkerScript& pScript,
   pConfig.options().setHashStyle(ArgHashStyle);
   pConfig.options().setNoStdlib(ArgNoStdlib);
   pConfig.options().setPrintMap(ArgPrintMap);
+  pConfig.options().setGCSections(ArgGCSections);
   pConfig.options().setGPSize(ArgGPSize);
+  if (ArgNoWarnMismatch)
+    pConfig.options().setWarnMismatch(false);
+  else
+    pConfig.options().setWarnMismatch(true);
 
   if (ArgStripAll)
     pConfig.options().setStripSymbols(mcld::GeneralOptions::StripAllSymbols);
@@ -1213,10 +1239,6 @@ static bool ProcessLinkerOptionsFromCommand(mcld::LinkerScript& pScript,
   cl::list<mcld::ZOption>::iterator zOptEnd = ArgZOptionList.end();
   for (zOpt = ArgZOptionList.begin(); zOpt != zOptEnd; ++zOpt) {
     pConfig.options().addZOption(*zOpt);
-  }
-
-  if (ArgGCSections) {
-    mcld::warning(mcld::diag::warn_unsupported_option) << ArgGCSections.ArgStr;
   }
 
   // set up icf mode
@@ -1508,13 +1530,13 @@ int main(int argc, char* argv[])
 
   {
     // Ask the target to add backend passes as necessary.
-    if( TheTargetMachine.addPassesToEmitFile(PM,
-                                             *Out,
-                                             ArgFileType,
-                                             OLvl,
-                                             LDIRModule,
-                                             LDConfig,
-                                             NoVerify)) {
+    if(TheTargetMachine.addPassesToEmitFile(PM,
+                                            *Out,
+                                            ArgFileType,
+                                            OLvl,
+                                            LDIRModule,
+                                            LDConfig,
+                                            NoVerify)) {
       errs() << argv[0] << ": target does not support generation of this"
              << " file type!\n";
       return 1;

@@ -6,8 +6,8 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef MCLD_GENERAL_OPTIONS_H
-#define MCLD_GENERAL_OPTIONS_H
+#ifndef MCLD_GENERALOPTIONS_H
+#define MCLD_GENERALOPTIONS_H
 #ifdef ENABLE_UNITTEST
 #include <gtest.h>
 #endif
@@ -274,6 +274,26 @@ public:
   bool printMap() const
   { return m_bPrintMap; }
 
+  void setWarnMismatch(bool pEnable = true)
+  { m_bWarnMismatch = pEnable; }
+
+  bool warnMismatch() const
+  { return m_bWarnMismatch; }
+
+  // --gc-sections
+  void setGCSections(bool pEnable = true)
+  { m_bGCSections = pEnable; }
+
+  bool GCSections() const
+  { return m_bGCSections; }
+
+  // --ld-generated-unwind-info
+  void setGenUnwindInfo(bool pEnable = true)
+  { m_bGenUnwindInfo = pEnable; }
+
+  bool genUnwindInfo() const
+  { return m_bGenUnwindInfo; }
+
   // -G, max GP size option
   void setGPSize(int gpsize)
   { m_GPSize = gpsize; }
@@ -371,6 +391,9 @@ private:
   bool m_bNewDTags: 1; // --enable-new-dtags
   bool m_bNoStdlib: 1; // -nostdlib
   bool m_bPrintMap: 1; // --print-map
+  bool m_bWarnMismatch: 1; // --no-warn-mismatch
+  bool m_bGCSections: 1; // --gc-sections
+  bool m_bGenUnwindInfo: 1; // --ld-generated-unwind-info
   uint32_t m_GPSize; // -G, --gpsize
   StripSymbolMode m_StripSymbols;
   RpathList m_RpathList;

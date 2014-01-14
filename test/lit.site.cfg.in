@@ -11,9 +11,8 @@ config.mclinker_src_root = "@MCLINKER_SOURCE_ROOT@"
 config.mclinker_obj_root = "@MCLINKER_OBJECT_ROOT@"
 config.llc = "@LLC@"
 config.mcld = "@MCLD@"
-config.aloneld = "@ALONELD@"
 config.fakeld = "@FAKELD@"
 config.llvm_config = "@LLVM_CONFIG@"
 
 # Let the main config do the real work.
-lit.load_config(config, "@MCLINKER_SOURCE_ROOT@/test/lit.cfg")
+lit_config.load_config(config, "@MCLINKER_SOURCE_ROOT@/test/lit.cfg")

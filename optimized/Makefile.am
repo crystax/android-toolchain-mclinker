@@ -11,197 +11,6 @@ BUILT_SOURCES = ScriptParser.cc
 AM_YFLAGS = -d
 AM_LFLAGS = -olex.yy.c
 
-HEADER = ${INCDIR}/AttributeOption.h \
-	${INCDIR}/BitcodeOption.h \
-	${INCDIR}/Environment.h \
-	${INCDIR}/GeneralOptions.h \
-	${INCDIR}/InputTree.h \
-	${INCDIR}/IRBuilder.h \
-	${INCDIR}/LinkerConfig.h \
-	${INCDIR}/Linker.h \
-	${INCDIR}/LinkerScript.h \
-	${INCDIR}/Module.h \
-	${INCDIR}/TargetOptions.h \
-	${INCDIR}/ADT/BinTree.h \
-	${INCDIR}/ADT/Flags.h \
-	${INCDIR}/ADT/HashBase.h \
-	${INCDIR}/ADT/HashBase.tcc \
-	${INCDIR}/ADT/HashEntryFactory.h \
-	${INCDIR}/ADT/HashEntry.h \
-	${INCDIR}/ADT/HashEntry.tcc \
-	${INCDIR}/ADT/HashIterator.h \
-	${INCDIR}/ADT/HashTable.h \
-	${INCDIR}/ADT/HashTable.tcc \
-	${INCDIR}/ADT/SizeTraits.h \
-	${INCDIR}/ADT/StringEntry.h \
-	${INCDIR}/ADT/StringEntry.tcc \
-	${INCDIR}/ADT/StringHash.h \
-	${INCDIR}/ADT/TreeAllocator.h \
-	${INCDIR}/ADT/TreeBase.h \
-	${INCDIR}/ADT/TypeTraits.h \
-	${INCDIR}/ADT/Uncopyable.h \
-	${INCDIR}/CodeGen/MCLinker.h \
-	${INCDIR}/CodeGen/TargetMachine.h \
-	${INCDIR}/Fragment/AlignFragment.h \
-	${INCDIR}/Fragment/FGEdge.h \
-	${INCDIR}/Fragment/FGNode.h \
-	${INCDIR}/Fragment/FillFragment.h \
-	${INCDIR}/Fragment/Fragment.h \
-	${INCDIR}/Fragment/FragmentGraph.h \
-	${INCDIR}/Fragment/FragmentRef.h \
-	${INCDIR}/Fragment/NullFragment.h \
-	${INCDIR}/Fragment/RegionFragment.h \
-	${INCDIR}/Fragment/Relocation.h \
-	${INCDIR}/Fragment/Stub.h \
-	${INCDIR}/Fragment/TargetFragment.h \
-	${INCDIR}/LD/Archive.h \
-	${INCDIR}/LD/ArchiveReader.h \
-	${INCDIR}/LD/BinaryReader.h \
-	${INCDIR}/LD/BranchIslandFactory.h \
-	${INCDIR}/LD/BranchIsland.h \
-	${INCDIR}/LD/BSDArchiveReader.h \
-	${INCDIR}/LD/DiagCommonKinds.inc \
-	${INCDIR}/LD/DiagGOTPLT.inc \
-	${INCDIR}/LD/DiagLayouts.inc \
-	${INCDIR}/LD/DiagLDScript.inc \
-	${INCDIR}/LD/DiagnosticEngine.h \
-	${INCDIR}/LD/Diagnostic.h \
-	${INCDIR}/LD/DiagnosticInfos.h \
-	${INCDIR}/LD/DiagnosticLineInfo.h \
-	${INCDIR}/LD/DiagnosticPrinter.h \
-	${INCDIR}/LD/DiagReaders.inc \
-	${INCDIR}/LD/DiagRelocations.inc \
-	${INCDIR}/LD/DiagSymbolResolutions.inc \
-	${INCDIR}/LD/DWARFLineInfo.h \
-	${INCDIR}/LD/DynObjFileFormat.h \
-	${INCDIR}/LD/DynObjReader.h \
-	${INCDIR}/LD/EhFrame.h \
-	${INCDIR}/LD/EhFrameHdr.h \
-	${INCDIR}/LD/EhFrameReader.h \
-	${INCDIR}/LD/ELFBinaryReader.h \
-	${INCDIR}/LD/ELFDynObjFileFormat.h \
-	${INCDIR}/LD/ELFDynObjReader.h \
-	${INCDIR}/LD/ELFExecFileFormat.h \
-	${INCDIR}/LD/ELFFileFormat.h \
-	${INCDIR}/LD/ELFObjectFileFormat.h \
-	${INCDIR}/LD/ELFObjectReader.h \
-	${INCDIR}/LD/ELFObjectWriter.h \
-	${INCDIR}/LD/ELFReader.h \
-	${INCDIR}/LD/ELFReaderIf.h \
-	${INCDIR}/LD/ELFSegmentFactory.h \
-	${INCDIR}/LD/ELFSegment.h \
-	${INCDIR}/LD/GNUArchiveReader.h \
-	${INCDIR}/LD/Group.h \
-	${INCDIR}/LD/GroupReader.h \
-	${INCDIR}/LD/LDContext.h \
-	${INCDIR}/LD/LDFileFormat.h \
-	${INCDIR}/LD/LDReader.h \
-	${INCDIR}/LD/LDSection.h \
-	${INCDIR}/LD/LDSymbol.h \
-	${INCDIR}/LD/MsgHandler.h \
-	${INCDIR}/LD/NamePool.h \
-	${INCDIR}/LD/ObjectReader.h \
-	${INCDIR}/LD/ObjectWriter.h \
-	${INCDIR}/LD/RelocationFactory.h \
-	${INCDIR}/LD/Relocator.h \
-	${INCDIR}/LD/RelocData.h \
-	${INCDIR}/LD/ResolveInfo.h \
-	${INCDIR}/LD/Resolver.h \
-	${INCDIR}/LD/SectionData.h \
-	${INCDIR}/LD/SectionSymbolSet.h \
-	${INCDIR}/LD/StaticResolver.h \
-	${INCDIR}/LD/StubFactory.h \
-	${INCDIR}/LD/TextDiagnosticPrinter.h \
-	${INCDIR}/MC/Attribute.h \
-	${INCDIR}/MC/AttributeSet.h \
-	${INCDIR}/MC/CommandAction.h \
-	${INCDIR}/MC/ContextFactory.h \
-	${INCDIR}/MC/FileAction.h \
-	${INCDIR}/MC/InputAction.h \
-	${INCDIR}/MC/InputBuilder.h \
-	${INCDIR}/MC/InputFactory.h \
-	${INCDIR}/MC/Input.h \
-	${INCDIR}/MC/MCLDDirectory.h \
-	${INCDIR}/MC/SearchDirs.h \
-	${INCDIR}/MC/SymbolCategory.h \
-	${INCDIR}/MC/ZOption.h \
-	${INCDIR}/Object/ObjectBuilder.h \
-	${INCDIR}/Object/ObjectLinker.h \
-	${INCDIR}/Object/SectionMap.h \
-	${INCDIR}/Script/AssertCmd.h \
-	${INCDIR}/Script/Assignment.h \
-	${INCDIR}/Script/BinaryOp.h \
-	${INCDIR}/Script/EntryCmd.h \
-	${INCDIR}/Script/ExprToken.h \
-	${INCDIR}/Script/FileToken.h \
-	${INCDIR}/Script/FlexLexer.h \
-	${INCDIR}/Script/GroupCmd.h \
-	${INCDIR}/Script/InputSectDesc.h \
-	${INCDIR}/Script/InputToken.h \
-	${INCDIR}/Script/NameSpec.h \
-	${INCDIR}/Script/NullaryOp.h \
-	${INCDIR}/Script/Operand.h \
-	${INCDIR}/Script/Operator.h \
-	${INCDIR}/Script/OutputArchCmd.h \
-	${INCDIR}/Script/OutputCmd.h \
-	${INCDIR}/Script/OutputFormatCmd.h \
-	${INCDIR}/Script/OutputSectDesc.h \
-	${INCDIR}/Script/RpnEvaluator.h \
-	${INCDIR}/Script/RpnExpr.h \
-	${INCDIR}/Script/ScriptCommand.h \
-	${INCDIR}/Script/ScriptFile.h \
-	${INCDIR}/Script/ScriptReader.h \
-	${INCDIR}/Script/ScriptScanner.h \
-	${INCDIR}/Script/SearchDirCmd.h \
-	${INCDIR}/Script/SectionsCmd.h \
-	${INCDIR}/Script/StringList.h \
-	${INCDIR}/Script/StrToken.h \
-	${INCDIR}/Script/TernaryOp.h \
-	${INCDIR}/Script/UnaryOp.h \
-	${INCDIR}/Script/WildcardPattern.h \
-	${INCDIR}/Support/Allocators.h \
-	${INCDIR}/Support/CommandLine.h \
-	${INCDIR}/Support/Directory.h \
-	${INCDIR}/Support/ELF.h \
-	${INCDIR}/Support/FileHandle.h \
-	${INCDIR}/Support/FileSystem.h \
-	${INCDIR}/Support/GCFactory.h \
-	${INCDIR}/Support/GCFactoryListTraits.h \
-	${INCDIR}/Support/HandleToArea.h \
-	${INCDIR}/Support/LEB128.h \
-	${INCDIR}/Support/MemoryAreaFactory.h \
-	${INCDIR}/Support/MemoryArea.h \
-	${INCDIR}/Support/MemoryRegion.h \
-	${INCDIR}/Support/MsgHandling.h \
-	${INCDIR}/Support/PathCache.h \
-	${INCDIR}/Support/Path.h \
-	${INCDIR}/Support/raw_mem_ostream.h \
-	${INCDIR}/Support/raw_ostream.h \
-	${INCDIR}/Support/RealPath.h \
-	${INCDIR}/Support/RegionFactory.h \
-	${INCDIR}/Support/Space.h \
-	${INCDIR}/Support/SystemUtils.h \
-	${INCDIR}/Support/Target.h \
-	${INCDIR}/Support/TargetRegistry.h \
-	${INCDIR}/Support/TargetSelect.h \
-	${INCDIR}/Support/ToolOutputFile.h \
-	${INCDIR}/Support/UniqueGCFactory.h \
-	${INCDIR}/Target/DarwinLDBackend.h \
-	${INCDIR}/Target/ELFDynamic.h \
-	${INCDIR}/Target/ELFDynamic.tcc \
-	${INCDIR}/Target/ELFEmulation.h \
-	${INCDIR}/Target/ELFMCLinker.h \
-	${INCDIR}/Target/GNUInfo.h \
-	${INCDIR}/Target/GNULDBackend.h \
-	${INCDIR}/Target/GOT.h \
-	${INCDIR}/Target/OutputRelocSection.h \
-	${INCDIR}/Target/PLT.h \
-	${INCDIR}/Target/SymbolEntryMap.h \
-	${INCDIR}/Target/TargetLDBackend.h \
-	${GENDIR}/Config/Config.h \
-	${GENDIR}/Config/Linkers.def \
-	${GENDIR}/Config/Targets.def
-
 SOURCE = ${LIBDIR}/ADT/StringEntry.cpp \
 	${LIBDIR}/CodeGen/MCLDTargetMachine.cpp \
 	${LIBDIR}/CodeGen/MCLinker.cpp \
@@ -217,10 +26,8 @@ SOURCE = ${LIBDIR}/ADT/StringEntry.cpp \
 	${LIBDIR}/Core/Module.cpp \
 	${LIBDIR}/Core/TargetOptions.cpp \
 	${LIBDIR}/Fragment/AlignFragment.cpp \
-	${LIBDIR}/Fragment/FGNode.cpp \
 	${LIBDIR}/Fragment/FillFragment.cpp \
 	${LIBDIR}/Fragment/Fragment.cpp \
-        ${LIBDIR}/Fragment/FragmentGraph.cpp \
 	${LIBDIR}/Fragment/FragmentRef.cpp \
 	${LIBDIR}/Fragment/NullFragment.cpp \
 	${LIBDIR}/Fragment/RegionFragment.cpp \
@@ -253,6 +60,7 @@ SOURCE = ${LIBDIR}/ADT/StringEntry.cpp \
 	${LIBDIR}/LD/ELFReaderIf.cpp \
 	${LIBDIR}/LD/ELFSegment.cpp \
 	${LIBDIR}/LD/ELFSegmentFactory.cpp \
+	${LIBDIR}/LD/GarbageCollection.cpp \
 	${LIBDIR}/LD/GNUArchiveReader.cpp \
 	${LIBDIR}/LD/GroupReader.cpp \
 	${LIBDIR}/LD/LDContext.cpp \
@@ -297,7 +105,6 @@ SOURCE = ${LIBDIR}/ADT/StringEntry.cpp \
 	${LIBDIR}/Script/GroupCmd.cpp \
 	${LIBDIR}/Script/InputSectDesc.cpp \
 	${LIBDIR}/Script/InputToken.cpp \
-	${LIBDIR}/Script/location.hh \
 	${LIBDIR}/Script/NameSpec.cpp \
 	${LIBDIR}/Script/NullaryOp.cpp \
 	${LIBDIR}/Script/Operand.cpp \
@@ -306,12 +113,10 @@ SOURCE = ${LIBDIR}/ADT/StringEntry.cpp \
 	${LIBDIR}/Script/OutputCmd.cpp \
 	${LIBDIR}/Script/OutputFormatCmd.cpp \
 	${LIBDIR}/Script/OutputSectDesc.cpp \
-	${LIBDIR}/Script/position.hh \
 	${LIBDIR}/Script/RpnEvaluator.cpp \
 	${LIBDIR}/Script/RpnExpr.cpp \
 	${LIBDIR}/Script/ScriptCommand.cpp \
 	${LIBDIR}/Script/ScriptFile.cpp \
-	${LIBDIR}/Script/ScriptParser.h \
 	${LIBDIR}/Script/ScriptParser.yy \
 	${LIBDIR}/Script/ScriptReader.cpp \
 	${LIBDIR}/Script/ScriptScanner.ll \
@@ -325,19 +130,15 @@ SOURCE = ${LIBDIR}/ADT/StringEntry.cpp \
 	${LIBDIR}/Support/CommandLine.cpp \
 	${LIBDIR}/Support/Directory.cpp \
 	${LIBDIR}/Support/FileHandle.cpp \
+	${LIBDIR}/Support/FileOutputBuffer.cpp \
 	${LIBDIR}/Support/FileSystem.cpp \
-	${LIBDIR}/Support/HandleToArea.cpp \
 	${LIBDIR}/Support/LEB128.cpp \
 	${LIBDIR}/Support/MemoryArea.cpp \
 	${LIBDIR}/Support/MemoryAreaFactory.cpp \
-	${LIBDIR}/Support/MemoryRegion.cpp \
 	${LIBDIR}/Support/MsgHandling.cpp \
 	${LIBDIR}/Support/Path.cpp \
-	${LIBDIR}/Support/raw_mem_ostream.cpp \
 	${LIBDIR}/Support/raw_ostream.cpp \
 	${LIBDIR}/Support/RealPath.cpp \
-	${LIBDIR}/Support/RegionFactory.cpp \
-	${LIBDIR}/Support/Space.cpp \
 	${LIBDIR}/Support/SystemUtils.cpp \
 	${LIBDIR}/Support/Target.cpp \
 	${LIBDIR}/Support/TargetRegistry.cpp \
@@ -350,6 +151,9 @@ SOURCE = ${LIBDIR}/ADT/StringEntry.cpp \
 	${LIBDIR}/Support/Windows/FileSystem.inc \
 	${LIBDIR}/Support/Windows/PathV3.inc \
 	${LIBDIR}/Support/Windows/System.inc \
+	${LIBDIR}/Target/ELFAttribute.cpp \
+	${LIBDIR}/Target/ELFAttributeData.cpp \
+	${LIBDIR}/Target/ELFAttributeValue.cpp \
 	${LIBDIR}/Target/ELFDynamic.cpp \
 	${LIBDIR}/Target/ELFEmulation.cpp \
 	${LIBDIR}/Target/ELFMCLinker.cpp \
@@ -360,6 +164,8 @@ SOURCE = ${LIBDIR}/ADT/StringEntry.cpp \
 	${LIBDIR}/Target/PLT.cpp \
 	${LIBDIR}/Target/TargetLDBackend.cpp \
 	${LIBDIR}/Target/ARM/ARMDiagnostic.cpp \
+	${LIBDIR}/Target/ARM/ARMELFAttributeData.cpp \
+	${LIBDIR}/Target/ARM/ARMELFAttributeData.h \
 	${LIBDIR}/Target/ARM/ARMELFDynamic.cpp \
 	${LIBDIR}/Target/ARM/ARMELFDynamic.h \
 	${LIBDIR}/Target/ARM/ARMELFMCLinker.cpp \
@@ -471,7 +277,10 @@ if ENABLE_WERROR
 ANDROID_CPPFLAGS+=-Werror
 endif
 
-MCLD_INCLUDES = -I${top_srcdir}/include -I${top_builddir}/include -I${INCDIR}/Script
+MCLD_INCLUDES = \
+	-I${top_srcdir}/include \
+	-I${top_builddir}/include \
+	-I${INCDIR}/Script
 
 MCLD_CPPFLAGS = -O2 ${LLVM_CPPFLAGS} ${ANDROID_CPPFLAGS}
 
@@ -480,6 +289,3 @@ AM_CPPFLAGS = ${MCLD_CPPFLAGS} ${MCLD_INCLUDES}
 lib_LIBRARIES= libmcld.a
 
 libmcld_a_SOURCES = ${SOURCE}
-
-nobase_include_HEADERS = ${HEADER}
-

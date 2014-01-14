@@ -6,8 +6,8 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef MCLD_SCRIPT_OUTPUT_SECTION_DESCRIPTION_INTERFACE_H
-#define MCLD_SCRIPT_OUTPUT_SECTION_DESCRIPTION_INTERFACE_H
+#ifndef MCLD_SCRIPT_OUTPUTSECTDESC_H
+#define MCLD_SCRIPT_OUTPUTSECTDESC_H
 #ifdef ENABLE_UNITTEST
 #include <gtest.h>
 #endif
@@ -51,11 +51,23 @@ public:
       assert(hasVMA());
       return *m_pVMA;
     }
+    RpnExpr& vma() {
+      assert(hasVMA());
+      return *m_pVMA;
+    }
+
+    void setType(Type pType) {
+      m_Type = pType;
+    }
 
     Type type() const { return m_Type; }
 
     bool hasLMA() const { return m_pLMA != NULL; }
     const RpnExpr& lma() const {
+      assert(hasLMA());
+      return *m_pLMA;
+    }
+    RpnExpr& lma() {
       assert(hasLMA());
       return *m_pLMA;
     }

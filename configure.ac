@@ -32,10 +32,10 @@ AM_INIT_AUTOMAKE([1.9 dist-bzip2 foreign])
 ####################
 #  Versioning, see VERSION
 MAJOR=2
-MINOR=5
+MINOR=7
 MICRO=0
-AGE=rc
-BUILD=Momo
+AGE=dev
+BUILD=
 
 DEV_VERSION=$MAJOR.$MINOR.$MICRO.$AGE-$BUILD
 PKG_VERSION=$MAJOR.$MINOR.$MICRO-$BUILD
@@ -79,7 +79,8 @@ fi
 AC_PATH_PROG([FLEX],[flex])
 AX_PROG_FLEX_VERSION([2.5.35],[],[AC_MSG_ERROR([Require flex 2.5.35 or later])])
 AC_PATH_PROG([BISON],[bison])
-AX_PROG_BISON_VERSION([2.4.3],[],[AC_MSG_ERROR([Require bison 2.4.3 or later])])
+AX_PROG_BISON_VERSION([2.4.3],[3.0],[],
+                      [AC_MSG_ERROR([Require bison >= 2.4.3 and < 3.0])])
 
 AC_LANG([C++])
 LT_INIT
@@ -132,10 +133,11 @@ AC_MSG_RESULT([$NO_VARIADIC_MACROS $NO_COVERED_SWITCH_DEFAULT $NO_C99_EXTENSIONS
 # Check for header files
 AC_CHECK_HEADERS([fcntl.h unistd.h])
 AC_CHECK_HEADERS([sys/mman.h])
+AC_CHECK_HEADERS([cxxabi.h])
 
 ####################
 # Configure LLVM
-CHECK_LLVM([3.3])
+CHECK_LLVM([3.4])
 ENUM_MCLD_TARGETS
 CHECK_ALONE_TARGET
 
@@ -171,6 +173,7 @@ AH_BOTTOM([
 # OUTPUT
 AC_CONFIG_FILES([VERSION])
 AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([include/Makefile])
 AC_CONFIG_FILES([debug/Makefile])
 AC_CONFIG_FILES([optimized/Makefile])
 AC_CONFIG_FILES([utils/Makefile])
@@ -178,9 +181,7 @@ AC_CONFIG_FILES([utils/gtest/Makefile])
 AC_CONFIG_FILES([utils/gtest/obj/Makefile])
 AC_CONFIG_FILES([include/mcld/Config/Targets.def])
 AC_CONFIG_FILES([include/mcld/Config/Linkers.def])
-AC_CONFIG_FILES([tools/bcc/include/bcc/Config/Config.h])
 AC_CONFIG_FILES([tools/Makefile])
-AC_CONFIG_FILES([tools/bcc/Makefile])
 AC_CONFIG_FILES([tools/lite/Makefile])
 AC_CONFIG_FILES([tools/mcld/Makefile])
 AC_CONFIG_FILES([test/Makefile])
