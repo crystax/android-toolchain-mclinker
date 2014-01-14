@@ -133,7 +133,8 @@ AC_DEFUN([CHECK_LLVM],
 				# Android bionic doesn't need -lpthread.  Pthread stuff in -lc instead.
 				# Likewise for -lrt.
 				LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lpthread//g'`"
-				LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lrt//g'`" ;;
+				LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lrt//g'`"
+				LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-ltinfo//g'`" ;;
 			*-*-linux*)
 				llvm_cv_os_type="Linux"
 				llvm_cv_platform_type="Unix" ;;
