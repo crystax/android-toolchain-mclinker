@@ -149,6 +149,7 @@ llvm::cl::opt<mcld::GeneralOptions::HashStyle> ArgHashStyle("hash-style",
        clEnumValEnd));
 
 llvm::cl::opt<bool> ArgNoWarnMismatch("no-warn-mismatch",
+  llvm::cl::ZeroOrMore,
   llvm::cl::desc("Allow linking together mismatched input files."),
   llvm::cl::init(false));
 

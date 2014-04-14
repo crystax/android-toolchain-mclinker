@@ -734,6 +734,7 @@ ArgARMCompatibility("p",
 
 static cl::opt<bool>
 ArgNoWarnMismatch("no-warn-mismatch",
+                  cl::ZeroOrMore,
                   cl::desc("Allow linking together mismatched input files."),
                   cl::init(false));
 
