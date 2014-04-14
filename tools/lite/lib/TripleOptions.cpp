@@ -86,12 +86,12 @@ ParseEmulation(llvm::Triple& pTriple, const std::string& pEmulation)
   llvm::Triple triple = llvm::StringSwitch<llvm::Triple>(pEmulation)
     .Case("aarch64linux",      llvm::Triple("aarch64", "", "linux", "gnu"))
     .Case("armelf_linux_eabi", llvm::Triple("arm", "", "linux", "gnueabi"))
-    .Case("elf_i386",          llvm::Triple("i386", "", "", "gnu"))
+    .Case("elf_i386",          llvm::Triple("i386", "", "linux", "gnu"))
     .Case("elf_x86_64",        llvm::Triple("x86_64", "", "", "gnu"))
     .Case("elf32_x86_64",      llvm::Triple("x86_64", "", "", "gnux32"))
     .Case("elf_i386_fbsd",     llvm::Triple("i386", "", "freebsd", "gnu"))
     .Case("elf_x86_64_fbsd",   llvm::Triple("x86_64", "", "freebsd", "gnu"))
-    .Case("elf32ltsmip",       llvm::Triple("mipsel", "", "", "gnu"))
+    .Case("elf32ltsmip",       llvm::Triple("mipsel", "", "linux", "gnu"))
     .Default(llvm::Triple());
 
   if (triple.getArch()        == llvm::Triple::UnknownArch &&

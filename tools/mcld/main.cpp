@@ -1043,12 +1043,12 @@ static Triple ParseEmulation(const std::string& pEmulation)
   Triple result = StringSwitch<Triple>(pEmulation)
     .Case("aarch64linux",      Triple("aarch64", "", "linux", "gnu"))
     .Case("armelf_linux_eabi", Triple("arm", "", "linux", "gnueabi"))
-    .Case("elf_i386",          Triple("i386", "", "", "gnu"))
+    .Case("elf_i386",          Triple("i386", "", "linux", "gnu"))
     .Case("elf_x86_64",        Triple("x86_64", "", "", "gnu"))
     .Case("elf32_x86_64",      Triple("x86_64", "", "", "gnux32"))
     .Case("elf_i386_fbsd",     Triple("i386", "", "freebsd", "gnu"))
     .Case("elf_x86_64_fbsd",   Triple("x86_64", "", "freebsd", "gnu"))
-    .Case("elf32ltsmip",       Triple("mipsel", "", "", "gnu"))
+    .Case("elf32ltsmip",       Triple("mipsel", "", "linux", "gnu"))
     .Default(Triple());
 
   if (result.getArch()        == Triple::UnknownArch &&
