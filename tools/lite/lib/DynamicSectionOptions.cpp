@@ -23,6 +23,7 @@ llvm::cl::alias ArgEntryAlias("entry",
   llvm::cl::aliasopt(ArgEntry));
 
 llvm::cl::opt<bool> ArgBsymbolic("Bsymbolic",
+  llvm::cl::ZeroOrMore,
   llvm::cl::desc("Bind references within the shared library."),
   llvm::cl::init(false));
 
@@ -35,6 +36,7 @@ llvm::cl::opt<std::string> ArgSOName("soname",
   llvm::cl::value_desc("name"));
 
 llvm::cl::opt<llvm::cl::boolOrDefault> ArgNoUndefined("no-undefined",
+  llvm::cl::ZeroOrMore,
   llvm::cl::desc("Do not allow unresolved references"));
 
 llvm::cl::opt<llvm::cl::boolOrDefault> ArgAllowMulDefs("allow-multiple-definition",

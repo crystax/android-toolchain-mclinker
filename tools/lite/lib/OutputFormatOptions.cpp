@@ -49,6 +49,7 @@ llvm::cl::opt<mcld::LinkerConfig::CodeGenType> ArgOFormat("oformat",
     clEnumValEnd));
 
 llvm::cl::opt<bool> ArgShared("shared",
+  llvm::cl::ZeroOrMore,
   llvm::cl::desc("Create a shared library."),
   llvm::cl::init(false));
 
@@ -256,9 +257,9 @@ bool OutputFormatOptions::parseOutput(Module& pModule, LinkerConfig& pConfig)
   pConfig.setCodeGenType(m_FileType);
 
   std::string output_filename(m_OutputFilename.native());
-  
+
   if (m_OutputFilename.empty()) {
-    
+
     if (llvm::Triple::Win32 == pConfig.targets().triple().getOS()) {
       output_filename.assign("_out");
       switch (m_FileType) {

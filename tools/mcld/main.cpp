@@ -336,6 +336,7 @@ ArgEntryAlias("entry",
 
 static cl::opt<bool>
 ArgBsymbolic("Bsymbolic",
+             cl::ZeroOrMore,
              cl::desc("Bind references within the shared library."),
              cl::init(false));
 
@@ -351,6 +352,7 @@ ArgSOName("soname",
 
 static cl::opt<bool>
 ArgNoUndefined("no-undefined",
+               cl::ZeroOrMore,
                cl::desc("Do not allow unresolved references"),
                cl::init(false));
 
@@ -390,6 +392,7 @@ ArgFileType("filetype", cl::init(mcld::CGFT_EXEFile),
 
 static cl::opt<bool>
 ArgShared("shared",
+          cl::ZeroOrMore,
           cl::desc("Create a shared library."),
           cl::init(false));
 
@@ -776,6 +779,7 @@ ArgNoFatalWarnings("no-fatal-warnings",
 
 static cl::opt<bool, true>
 ArgFatalWarningsFlag("fatal-warnings",
+              cl::ZeroOrMore,
               cl::location(ArgFatalWarnings),
               cl::desc("turn all warnings into errors"),
               cl::init(false),
@@ -783,6 +787,7 @@ ArgFatalWarningsFlag("fatal-warnings",
 
 static cl::opt<bool>
 ArgWarnSharedTextrel("warn-shared-textrel",
+                     cl::ZeroOrMore,
                      cl::desc("Warn if adding DT_TEXTREL in a shared object."),
                      cl::init(false));
 
@@ -1036,6 +1041,7 @@ static std::string ParseProgName(const char *progname)
 static Triple ParseEmulation(const std::string& pEmulation)
 {
   Triple result = StringSwitch<Triple>(pEmulation)
+    .Case("aarch64linux",      Triple("aarch64", "", "linux", "gnu"))
     .Case("armelf_linux_eabi", Triple("arm", "", "linux", "gnueabi"))
     .Case("elf_i386",          Triple("i386", "", "", "gnu"))
     .Case("elf_x86_64",        Triple("x86_64", "", "", "gnu"))
