@@ -35,9 +35,9 @@ namespace mcld {
 // raw_ostream
 //===----------------------------------------------------------------------===//
 raw_fd_ostream::raw_fd_ostream(const char* pFilename,
-                               std::error_code& pErrorCode,
+                                     std::string &pErrorInfo,
                                llvm::sys::fs::OpenFlags pFlags)
-    : llvm::raw_fd_ostream(pFilename, pErrorCode, pFlags),
+    : llvm::raw_fd_ostream(pFilename, pErrorInfo, pFlags),
       m_bConfigColor(false),
       m_bSetColor(false) {
 }

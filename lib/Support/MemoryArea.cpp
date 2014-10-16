@@ -32,10 +32,11 @@ MemoryArea::MemoryArea(llvm::StringRef pFilename) {
 
 MemoryArea::MemoryArea(const char* pMemBuffer, size_t pSize) {
   llvm::StringRef mem(pMemBuffer, pSize);
-  m_pMemoryBuffer =
-      llvm::MemoryBuffer::getMemBuffer(mem,
-                                       /*BufferName*/ "NaN",
+  llvm::MemoryBuffer* buffer =
+      llvm::MemoryBuffer::getMemBuffer(mem, /*BufferName*/ "NaN",
                                        /*RequiresNullTerminator*/ false);
+  assert(buffer != NULL);
+  m_pMemoryBuffer.reset(buffer);
 }
 
 llvm::StringRef MemoryArea::request(size_t pOffset, size_t pLength) {
