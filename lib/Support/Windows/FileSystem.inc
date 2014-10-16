@@ -60,7 +60,7 @@ void open_dir(Directory& pDir) {
   std::string path(FindFileData.cFileName);
   fs::PathCache::entry_type* entry = pDir.m_Cache.insert(path, exist);
   if (!exist)
-    entry->setValue(path);
+    entry->setValue(sys::fs::Path(path));
 }
 
 void close_dir(Directory& pDir) {
