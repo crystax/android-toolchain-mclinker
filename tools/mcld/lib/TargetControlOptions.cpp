@@ -38,6 +38,7 @@ llvm::cl::opt<bool> ArgEL(
     "EL",
     llvm::cl::desc(
         "Link little-endian objects. This affects the output format."),
+    llvm::cl::ZeroOrMore,
     llvm::cl::init(false));
 
 llvm::cl::opt<bool> ArgSVR4Compatibility(

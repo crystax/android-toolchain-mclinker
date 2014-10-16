@@ -172,6 +172,7 @@ llvm::cl::opt<mcld::GeneralOptions::HashStyle> ArgHashStyle(
 llvm::cl::opt<bool> ArgNoWarnMismatch(
     "no-warn-mismatch",
     llvm::cl::desc("Allow linking together mismatched input files."),
+    llvm::cl::ZeroOrMore,
     llvm::cl::init(false));
 
 // Not supported yet {
