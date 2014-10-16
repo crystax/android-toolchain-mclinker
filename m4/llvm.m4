@@ -12,6 +12,17 @@ dnl Luba Tang <lubatang@gmail.com>
 AC_DEFUN([CHECK_LLVM],
 [dnl
 
+	AC_ARG_WITH([llvm-shared-lib],
+		AS_HELP_STRING([--with-llvm-shared-lib],
+		[Link shared library against LLVM to reduce size (full path to libLLVM.so)]),)
+	AC_MSG_CHECKING(for libLLVM.so)
+	if test -n ${withval} -a -f ${withval}; then
+		LLVM_SHARED_LIB="${withval}"
+		AC_MSG_RESULT(${LLVM_SHARED_LIB})
+	else
+		AC_MSG_RESULT([no])
+	fi
+
 	AC_ARG_WITH(
 		[llvm-config],
 		[AS_HELP_STRING([--with-llvm-config[[=PATH]]],
@@ -57,7 +68,12 @@ AC_DEFUN([CHECK_LLVM],
 	LLVM_CPPFLAGS="`${LLVM_CONFIG_BIN} --cxxflags`"
 	LLVM_LDFLAGS="`${LLVM_CONFIG_BIN} --libs`"
 	LLVM_LDFLAGS="${LLVM_LDFLAGS} `${LLVM_CONFIG_BIN} --system-libs`"
-	LLVM_LDFLAGS="${LLVM_LDFLAGS} `${LLVM_CONFIG_BIN} --ldflags`"
+	if test -n "${LLVM_SHARED_LIB}" -a -f "${LLVM_SHARED_LIB}"; then
+		# Use libLLVM.so instead of lots libLLVM*.a
+		LLVM_LDFLAGS="${LLVM_SHARED_LIB} `${LLVM_CONFIG_BIN} --ldflags`"
+	else
+		LLVM_LDFLAGS="${LLVM_LDFLAGS} `${LLVM_CONFIG_BIN} --ldflags`"
+	fi
 	LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/\n//g'`"
 	LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lgtest_main -lgtest//g'`"
 
@@ -102,6 +118,14 @@ AC_DEFUN([CHECK_LLVM],
 			*-*-interix*)
 				llvm_cv_os_type="Interix"
 				llvm_cv_platform_type="Unix" ;;
+			*-*-linux-android*)
+				llvm_cv_os_type="Linux"
+				llvm_cv_platform_type="Unix"
+				# Android bionic doesn't need -lpthread.  Pthread stuff in -lc instead.
+				# Likewise for -lrt.
+				LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lpthread//g'`"
+				LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-lrt//g'`"
+				LLVM_LDFLAGS="`echo ${LLVM_LDFLAGS} | sed 's/-ltinfo//g'`" ;;
 			*-*-linux*)
 				llvm_cv_os_type="Linux"
 				llvm_cv_platform_type="Unix" ;;
