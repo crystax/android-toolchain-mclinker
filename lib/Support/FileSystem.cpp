@@ -7,6 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 #include <mcld/Config/Config.h>
+#include <llvm/Support/ErrorHandling.h>
 #include <mcld/Support/FileSystem.h>
 #include <mcld/Support/Path.h>
 
