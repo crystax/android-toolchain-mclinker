@@ -8,11 +8,11 @@
 //===----------------------------------------------------------------------===//
 #include <mcld/LD/Resolver.h>
 
-using namespace mcld;
+namespace mcld {
 
 //==========================
 // Resolver
-Resolver::~Resolver()
-{
+Resolver::~Resolver() {
 }
 
+}  // namespace mcld

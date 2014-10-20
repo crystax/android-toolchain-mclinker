@@ -1,6 +1,5 @@
 add_mcld_library(MCLDCore
   AttributeOption.cpp
-  BitcodeOption.cpp
   Environment.cpp
   GeneralOptions.cpp
   InputTree.cpp
@@ -12,7 +11,7 @@ add_mcld_library(MCLDCore
   TargetOptions.cpp
   )
 
-target_link_libraries(MCLDCore
+target_link_libraries(MCLDCore ${cmake_2_8_12_PRIVATE}
   MCLDADT
   MCLDMC
   MCLDObject

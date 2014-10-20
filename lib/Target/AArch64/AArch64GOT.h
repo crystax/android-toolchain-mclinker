@@ -6,11 +6,8 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef TARGET_AARCH64_AARCH64GOT_H
-#define TARGET_AARCH64_AARCH64GOT_H
-#ifdef ENABLE_UNITTEST
-#include <gtest.h>
-#endif
+#ifndef TARGET_AARCH64_AARCH64GOT_H_
+#define TARGET_AARCH64_AARCH64GOT_H_
 
 #include <mcld/Support/MemoryRegion.h>
 #include <mcld/Target/GOT.h>
@@ -26,12 +23,10 @@ class LDSection;
 /** \class AArch64GOTEntry
  *  \brief GOT Entry with size of 8 bytes
  */
-class AArch64GOTEntry : public GOT::Entry<8>
-{
-public:
+class AArch64GOTEntry : public GOT::Entry<8> {
+ public:
   AArch64GOTEntry(uint64_t pContent, SectionData* pParent)
-   : GOT::Entry<8>(pContent, pParent)
-  {}
+      : GOT::Entry<8>(pContent, pParent) {}
 };
 
 /** \class AArch64GOT
@@ -56,10 +51,9 @@ public:
  *            +--------------+
  *
  */
-class AArch64GOT : public GOT
-{
-public:
-  AArch64GOT(LDSection &pSection);
+class AArch64GOT : public GOT {
+ public:
+  explicit AArch64GOT(LDSection& pSection);
 
   ~AArch64GOT();
 
@@ -81,12 +75,12 @@ public:
 
   bool hasGOT1() const;
 
-private:
+ private:
   typedef std::vector<AArch64GOTEntry*> EntryListType;
   typedef EntryListType::iterator entry_iterator;
   typedef EntryListType::const_iterator const_entry_iterator;
 
-private:
+ private:
   AArch64GOTEntry* m_pGOTPLTFront;
   AArch64GOTEntry* m_pGOTFront;
 
@@ -97,7 +91,6 @@ private:
   EntryListType m_GOT;
 };
 
-} // namespace of mcld
+}  // namespace mcld
 
-#endif
-
+#endif  // TARGET_AARCH64_AARCH64GOT_H_

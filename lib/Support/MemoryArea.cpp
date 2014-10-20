@@ -8,41 +8,42 @@
 //===----------------------------------------------------------------------===//
 #include <mcld/Support/MemoryArea.h>
 #include <mcld/Support/MsgHandling.h>
-#include <llvm/Support/system_error.h>
+
+#include <llvm/Support/ErrorOr.h>
 
 #include <cassert>
+#include <system_error>
 
-using namespace mcld;
+namespace mcld {
 
 //===--------------------------------------------------------------------===//
 // MemoryArea
 //===--------------------------------------------------------------------===//
-MemoryArea::MemoryArea(llvm::StringRef pFilename)
-{
-  llvm::error_code ec =
-      llvm::MemoryBuffer::getFile(pFilename, m_pMemoryBuffer, /*FileSize*/ -1,
+MemoryArea::MemoryArea(llvm::StringRef pFilename) {
+  llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer> > buffer_or_error =
+      llvm::MemoryBuffer::getFile(pFilename,
+                                  /*FileSize*/ -1,
                                   /*RequiresNullTerminator*/ false);
-  if (ec != llvm::errc::success) {
+  if (!buffer_or_error) {
     fatal(diag::fatal_cannot_read_input) << pFilename.str();
   }
+  m_pMemoryBuffer = std::move(buffer_or_error.get());
 }
 
-MemoryArea::MemoryArea(const char* pMemBuffer, size_t pSize)
-{
+MemoryArea::MemoryArea(const char* pMemBuffer, size_t pSize) {
   llvm::StringRef mem(pMemBuffer, pSize);
-  llvm::MemoryBuffer* buffer =
-      llvm::MemoryBuffer::getMemBuffer(mem, /*BufferName*/ "NaN",
+  m_pMemoryBuffer =
+      llvm::MemoryBuffer::getMemBuffer(mem,
+                                       /*BufferName*/ "NaN",
                                        /*RequiresNullTerminator*/ false);
-  assert(buffer != NULL);
-  m_pMemoryBuffer.reset(buffer);
 }
 
-llvm::StringRef MemoryArea::request(size_t pOffset, size_t pLength)
-{
+llvm::StringRef MemoryArea::request(size_t pOffset, size_t pLength) {
   return llvm::StringRef(m_pMemoryBuffer->getBufferStart() + pOffset, pLength);
 }
 
-size_t MemoryArea::size() const
-{
+size_t MemoryArea::size() const {
   return m_pMemoryBuffer->getBufferSize();
 }
+
+}  // namespace mcld

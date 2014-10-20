@@ -6,14 +6,11 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef TARGET_HEXAGON_HEXAGONGOTPLT_H
-#define TARGET_HEXAGON_HEXAGONGOTPLT_H
-#ifdef ENABLE_UNITTEST
-#include <gtest.h>
-#endif
+#ifndef TARGET_HEXAGON_HEXAGONGOTPLT_H_
+#define TARGET_HEXAGON_HEXAGONGOTPLT_H_
 
-#include <llvm/ADT/DenseMap.h>
 #include "HexagonGOT.h"
+#include <llvm/ADT/DenseMap.h>
 
 namespace mcld {
 
@@ -26,10 +23,9 @@ const unsigned int HexagonGOTPLT0Num = 4;
 /** \class HexagonGOTPLT
  *  \brief Hexagon .got.plt section.
  */
-class HexagonGOTPLT : public HexagonGOT
-{
-public:
-  HexagonGOTPLT(LDSection &pSection);
+class HexagonGOTPLT : public HexagonGOT {
+ public:
+  explicit HexagonGOTPLT(LDSection& pSection);
 
   ~HexagonGOTPLT();
 
@@ -41,6 +37,6 @@ public:
   void applyAllGOTPLT(const HexagonPLT& pPLT);
 };
 
-} // namespace of mcld
+}  // namespace mcld
 
-#endif
+#endif  // TARGET_HEXAGON_HEXAGONGOTPLT_H_

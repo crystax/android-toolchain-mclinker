@@ -13,22 +13,19 @@
 
 #include <llvm/Support/Casting.h>
 
-using namespace mcld;
+namespace mcld {
 
 //===----------------------------------------------------------------------===//
 // HexagonGOT
 //===----------------------------------------------------------------------===//
-HexagonGOT::HexagonGOT(LDSection& pSection)
-  : GOT(pSection), m_pLast(NULL)
-{
+HexagonGOT::HexagonGOT(LDSection& pSection) : GOT(pSection) {
 }
 
-HexagonGOT::~HexagonGOT()
-{
+HexagonGOT::~HexagonGOT() {
 }
 
-HexagonGOTEntry* HexagonGOT::create()
-{
+HexagonGOTEntry* HexagonGOT::create() {
   return new HexagonGOTEntry(0, m_SectionData);
 }
 
+}  // namespace mcld

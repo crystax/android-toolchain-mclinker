@@ -6,20 +6,15 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
+#ifndef TARGET_ARM_ARMTOARMSTUB_H_
+#define TARGET_ARM_ARMTOARMSTUB_H_
 
-#ifndef TARGET_ARM_ARMTOARMSTUB_H
-#define TARGET_ARM_ARMTOARMSTUB_H
-#ifdef ENABLE_UNITTEST
-#include <gtest.h>
-#endif
-
-#include <llvm/Support/DataTypes.h>
 #include <mcld/Fragment/Stub.h>
+#include <llvm/Support/DataTypes.h>
 #include <string>
 #include <vector>
 
-namespace mcld
-{
+namespace mcld {
 
 class Relocation;
 class ResolveInfo;
@@ -28,10 +23,9 @@ class ResolveInfo;
  *  \brief ARM stub for long call from ARM source to ARM target
  *
  */
-class ARMToARMStub : public Stub
-{
-public:
-  ARMToARMStub(bool pIsOutputPIC);
+class ARMToARMStub : public Stub {
+ public:
+  explicit ARMToARMStub(bool pIsOutputPIC);
 
   ~ARMToARMStub();
 
@@ -49,7 +43,7 @@ public:
 
   size_t alignment() const;
 
-private:
+ private:
   ARMToARMStub(const ARMToARMStub&);
 
   ARMToARMStub& operator=(const ARMToARMStub&);
@@ -63,14 +57,14 @@ private:
   /// doClone
   Stub* doClone();
 
-private:
-  std::string m_Name;
+ private:
   static const uint32_t PIC_TEMPLATE[];
   static const uint32_t TEMPLATE[];
   const uint32_t* m_pData;
+  std::string m_Name;
   size_t m_Size;
 };
 
-} // namespace of mcld
+}  // namespace mcld
 
-#endif
+#endif  // TARGET_ARM_ARMTOARMSTUB_H_

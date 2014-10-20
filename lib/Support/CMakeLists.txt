@@ -1,5 +1,6 @@
 add_mcld_library(MCLDSupport
   CommandLine.cpp
+  Demangle.cpp
   Directory.cpp
   FileHandle.cpp
   FileOutputBuffer.cpp
@@ -14,7 +15,6 @@ add_mcld_library(MCLDSupport
   SystemUtils.cpp
   Target.cpp
   TargetRegistry.cpp
-  ToolOutputFile.cpp
   Unix/FileSystem.inc
   Unix/PathV3.inc
   Unix/System.inc
@@ -23,6 +23,6 @@ add_mcld_library(MCLDSupport
   Windows/System.inc
   )
 
-target_link_libraries(MCLDSupport
+target_link_libraries(MCLDSupport ${cmake_2_8_12_PRIVATE}
   MCLDLD
   )

@@ -39,13 +39,15 @@ using namespace mcld;
 %require "2.4"
 %skeleton "glr.cc"
 %defines "ScriptParser.h"
-%debug
 %error-verbose
 %define namespace "mcld"
 %define "parser_class_name" "ScriptParser"
 %parse-param { const class LinkerConfig& m_LDConfig }
 %parse-param { class ScriptFile& m_ScriptFile }
 %parse-param { class ScriptScanner& m_ScriptScanner }
+%parse-param { class ObjectReader& m_ObjectReader}
+%parse-param { class ArchiveReader& m_ArchiveReader}
+%parse-param { class DynObjReader& m_DynObjReader}
 %parse-param { class GroupReader& m_GroupReader}
 %lex-param { const class ScriptFile& m_ScriptFile }
 
@@ -211,6 +213,7 @@ linker_script : linker_script script_command
 script_command : entry_command
                | output_format_command
                | group_command
+               | input_command
                | output_command
                | search_dir_command
                | output_arch_command
@@ -232,6 +235,13 @@ output_format_command : OUTPUT_FORMAT '(' STRING ')'
 
 group_command : GROUP '(' input_list ')'
                 { m_ScriptFile.addGroupCmd(*$3, m_GroupReader, m_LDConfig); }
+              ;
+
+input_command : INPUT '(' input_list ')'
+                {
+                  m_ScriptFile.addInputCmd(*$3, m_ObjectReader, m_ArchiveReader,
+                                           m_DynObjReader, m_LDConfig);
+                }
               ;
 
 search_dir_command : SEARCH_DIR '(' STRING ')'

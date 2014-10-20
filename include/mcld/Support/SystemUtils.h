@@ -6,14 +6,13 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef MCLD_SUPPORT_SYSTEMUTILS_H
-#define MCLD_SUPPORT_SYSTEMUTILS_H
-#ifdef ENABLE_UNITTEST
-#include <gtest.h>
-#endif
+#ifndef MCLD_SUPPORT_SYSTEMUTILS_H_
+#define MCLD_SUPPORT_SYSTEMUTILS_H_
+
+#include <mcld/Config/Config.h>
 
 #include <llvm/Support/DataTypes.h>
-#include <mcld/Config/Config.h>
+
 #include <string>
 
 namespace mcld {
@@ -25,7 +24,7 @@ typedef off_t Offset;
 /** \fn strerror
  *  \brief system error message
  */
-char *strerror(int pErrnum);
+char* strerror(int pErrnum);
 
 std::string getDefaultTargetTriple();
 
@@ -37,8 +36,7 @@ long GetRandomNum();
 /// SetRandomSeed - set the initial seed value for future calls to random().
 void SetRandomSeed(unsigned pSeed);
 
-} // namespace of sys
-} // namespace of mcld
+}  // namespace sys
+}  // namespace mcld
 
-#endif
-
+#endif  // MCLD_SUPPORT_SYSTEMUTILS_H_

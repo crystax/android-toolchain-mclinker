@@ -6,36 +6,31 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef MCLD_LD_OBJECTWRITER_H
-#define MCLD_LD_OBJECTWRITER_H
-#ifdef ENABLE_UNITTEST
-#include <gtest.h>
-#endif
-#include <llvm/Support/system_error.h>
+#ifndef MCLD_LD_OBJECTWRITER_H_
+#define MCLD_LD_OBJECTWRITER_H_
+#include <system_error>
 
 namespace mcld {
 
-class Module;
 class FileOutputBuffer;
+class Module;
 
 /** \class ObjectWriter
  *  \brief ObjectWriter provides a common interface for object file writers.
  */
-class ObjectWriter
-{
-protected:
+class ObjectWriter {
+ protected:
   ObjectWriter();
 
-public:
+ public:
   virtual ~ObjectWriter();
 
-  virtual llvm::error_code writeObject(Module& pModule,
-                                       FileOutputBuffer& pOutput) = 0;
+  virtual std::error_code writeObject(Module& pModule,
+                                      FileOutputBuffer& pOutput) = 0;
 
   virtual size_t getOutputSize(const Module& pModule) const = 0;
 };
 
-} // namespace of mcld
+}  // namespace mcld
 
-#endif
-
+#endif  // MCLD_LD_OBJECTWRITER_H_

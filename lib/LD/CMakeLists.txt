@@ -5,6 +5,7 @@ add_mcld_library(MCLDLD
   BranchIsland.cpp
   BranchIslandFactory.cpp
   BSDArchiveReader.cpp
+  DebugString.cpp
   Diagnostic.cpp
   DiagnosticEngine.cpp
   DiagnosticInfos.cpp
@@ -29,11 +30,13 @@ add_mcld_library(MCLDLD
   GarbageCollection.cpp
   GNUArchiveReader.cpp
   GroupReader.cpp
+  IdenticalCodeFolding.cpp
   LDContext.cpp
   LDFileFormat.cpp
   LDReader.cpp
   LDSection.cpp
   LDSymbol.cpp
+  MergedStringTable.cpp
   MsgHandler.cpp
   NamePool.cpp
   ObjectWriter.cpp
@@ -49,6 +52,7 @@ add_mcld_library(MCLDLD
   TextDiagnosticPrinter.cpp
   )
 
-target_link_libraries(MCLDLD
+target_link_libraries(MCLDLD ${cmake_2_8_12_PRIVATE}
   MCLDFragment
+  MCLDSupport
   )

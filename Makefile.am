@@ -2,10 +2,12 @@ ACLOCAL_AMFLAGS=-I m4
 
 AUTOMAKE_OPTIONS = foreign
 
-if ENABLE_UNITTEST
-SUBDIRS = utils debug test tools include
-else
-SUBDIRS = optimized tools include
-endif
+SUBDIRS = include lib tools utils unittests test
 
 EXTRA_DIST = ./docs/MCLinker.dia ./autogen.sh
+
+.PHONY: unittests
+unittests:
+	cd unittests && $(MAKE) $(AM_MAKEFLAGS) unittests
+
+include Makefile.am.cpplint

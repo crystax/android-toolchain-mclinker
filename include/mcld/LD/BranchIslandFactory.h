@@ -6,18 +6,15 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef MCLD_LD_BRANCHISLANDFACTORY_H
-#define MCLD_LD_BRANCHISLANDFACTORY_H
-#ifdef ENABLE_UNITTEST
-#include <gtest.h>
-#endif
+#ifndef MCLD_LD_BRANCHISLANDFACTORY_H_
+#define MCLD_LD_BRANCHISLANDFACTORY_H_
+
+#include <mcld/LD/BranchIsland.h>
+#include <mcld/Support/GCFactory.h>
 
 #include <llvm/Support/DataTypes.h>
-#include <mcld/Support/GCFactory.h>
-#include <mcld/LD/BranchIsland.h>
 
-namespace mcld
-{
+namespace mcld {
 
 class Fragment;
 class Module;
@@ -26,15 +23,16 @@ class Module;
  *  \brief
  *
  */
-class BranchIslandFactory : public GCFactory<BranchIsland, 0>
-{
-public:
+class BranchIslandFactory : public GCFactory<BranchIsland, 0> {
+ public:
   /// ctor
-  /// @param pMaxBranchRange - the max branch range of the target backend
+  /// @param pMaxFwdBranchRange - the max forward branch range of the target
+  /// @param pMaxBwdBranchRange - the max backward branch range of the target
   /// @param pMaxIslandSize - a predifned value (64KB here) to decide the max
   ///                         size of the island
-  BranchIslandFactory(uint64_t pMaxBranchRange,
-                      uint64_t pMaxIslandSize = 65536U);
+  BranchIslandFactory(int64_t pMaxFwdBranchRange,
+                      int64_t pMaxBwdBranchRange,
+                      size_t pMaxIslandSize = 65536U);
 
   ~BranchIslandFactory();
 
@@ -46,16 +44,17 @@ public:
   /// @param pFragment - the fragment needs a branch island
   BranchIsland* produce(Fragment& pFragment);
 
-  /// find - find a island for the given fragment
-  /// @param pFragment - the fragment needs a branch isladn
-  BranchIsland* find(const Fragment& pFragment);
+  /// getIsland - find fwd and bwd islands for the fragment
+  /// @param pFragment - the fragment needs a branch island
+  /// @return - return the pair of <fwd island, bwd island>
+  std::pair<BranchIsland*, BranchIsland*> getIslands(const Fragment& pFragment);
 
-private:
-  uint64_t m_MaxBranchRange;
-  uint64_t m_MaxIslandSize;
+ private:
+  int64_t m_MaxFwdBranchRange;
+  int64_t m_MaxBwdBranchRange;
+  size_t m_MaxIslandSize;
 };
 
-} // namespace of mcld
+}  // namespace mcld
 
-#endif
-
+#endif  // MCLD_LD_BRANCHISLANDFACTORY_H_

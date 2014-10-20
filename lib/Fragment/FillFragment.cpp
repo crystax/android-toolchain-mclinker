@@ -10,7 +10,7 @@
 #include <mcld/LD/SectionData.h>
 #include <cassert>
 
-using namespace mcld;
+namespace mcld {
 
 //===----------------------------------------------------------------------===//
 // FillFragment
@@ -19,9 +19,12 @@ FillFragment::FillFragment(int64_t pValue,
                            unsigned int pValueSize,
                            uint64_t pSize,
                            SectionData* pSD)
-  : Fragment(Fragment::Fillment, pSD), m_Value(pValue), m_ValueSize(pValueSize),
-    m_Size(pSize) {
+    : Fragment(Fragment::Fillment, pSD),
+      m_Value(pValue),
+      m_ValueSize(pValueSize),
+      m_Size(pSize) {
   assert((!m_ValueSize || (m_Size % m_ValueSize) == 0) &&
-           "Fill size must be a multiple of the value size!");
+         "Fill size must be a multiple of the value size!");
 }
 
+}  // namespace mcld

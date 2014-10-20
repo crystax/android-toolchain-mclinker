@@ -11,41 +11,36 @@
 #include <mcld/LD/ELFFileFormat.h>
 #include <mcld/LinkerConfig.h>
 
-using namespace mcld;
+namespace mcld {
 
 AArch64ELFDynamic::AArch64ELFDynamic(const GNULDBackend& pParent,
                                      const LinkerConfig& pConfig)
-  : ELFDynamic(pParent, pConfig)
-{
+    : ELFDynamic(pParent, pConfig) {
 }
 
-AArch64ELFDynamic::~AArch64ELFDynamic()
-{
+AArch64ELFDynamic::~AArch64ELFDynamic() {
 }
 
-void AArch64ELFDynamic::reserveTargetEntries(const ELFFileFormat& pFormat)
-{
+void AArch64ELFDynamic::reserveTargetEntries(const ELFFileFormat& pFormat) {
   // reservePLTGOT
   if (config().options().hasNow()) {
     if (pFormat.hasGOT())
       reserveOne(llvm::ELF::DT_PLTGOT);
-  }
-  else {
+  } else {
     if (pFormat.hasGOTPLT())
       reserveOne(llvm::ELF::DT_PLTGOT);
   }
 }
 
-void AArch64ELFDynamic::applyTargetEntries(const ELFFileFormat& pFormat)
-{
+void AArch64ELFDynamic::applyTargetEntries(const ELFFileFormat& pFormat) {
   // applyPLTGOT
   if (config().options().hasNow()) {
     if (pFormat.hasGOT())
       applyOne(llvm::ELF::DT_PLTGOT, pFormat.getGOT().addr());
-  }
-  else {
+  } else {
     if (pFormat.hasGOTPLT())
       applyOne(llvm::ELF::DT_PLTGOT, pFormat.getGOTPLT().addr());
   }
 }
 
+}  // namespace mcld

@@ -6,16 +6,10 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef MCLD_LD_LDREADER_H
-#define MCLD_LD_LDREADER_H
-#ifdef ENABLE_UNITTEST
-#include <gtest.h>
-#endif
+#ifndef MCLD_LD_LDREADER_H_
+#define MCLD_LD_LDREADER_H_
 
-#include <llvm/Support/DataTypes.h>
-
-namespace mcld
-{
+namespace mcld {
 
 class Input;
 
@@ -23,25 +17,19 @@ class Input;
  *  \brief LDReader provides the basic interfaces for all readers. It also
  *  provides basic functions to read data stream.
  */
-class LDReader
-{
-public:
-  enum Endian {
-    LittleEndian,
-    BigEndian
-  };
+class LDReader {
+ public:
+  enum Endian { LittleEndian, BigEndian };
 
-protected:
-  LDReader() { }
+ protected:
+  LDReader() {}
 
-public:
-  virtual ~LDReader() { }
+ public:
+  virtual ~LDReader() {}
 
-  virtual bool isMyFormat(Input& pInput, bool &pContinue) const = 0;
-
+  virtual bool isMyFormat(Input& pInput, bool& pContinue) const = 0;
 };
 
-} // namespace of mcld
+}  // namespace mcld
 
-#endif
-
+#endif  // MCLD_LD_LDREADER_H_

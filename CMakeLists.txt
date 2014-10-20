@@ -66,12 +66,11 @@ set(MCLD_DEFAULT_TARGET_TRIPLE "${LLVM_HOST_TRIPLE}" CACHE STRING
 ################################################################################
 #  Versioning, see VERSION
   set(MAJOR 2)
-  set(MINOR 8)
+  set(MINOR 9)
   set(MICRO 0)
-  set(AGE dev)
-  set(BUILD )
-  set(DEV_VERSION ${MAJOR}.${MINOR}.${MICRO}.${AGE}-${BUILD})
-  set(PKG_VERSION ${MAJOR}.${MINOR}.${MICRO}-{$BUILD})
+  set(BUILD dev)
+  set(DEV_VERSION ${MAJOR}.${MINOR}.${MICRO}-${BUILD})
+  set(PKG_VERSION ${MAJOR}.${MINOR}.${MICRO}-${BUILD})
   set(MCLD_VERSION ${DEV_VERSION})
   message(STATUS "MCLD version: " ${MCLD_VERSION})
 
@@ -189,6 +188,7 @@ macro(add_mcld_library name)
   endif()
 
   add_library(${name} ${libkind} ${srcs})
+  llvm_update_compile_flags(${name} ${srcs})
   if (LLVM_COMMON_DEPENDS)
     add_dependencies(${name} ${LLVM_COMMON_DEPENDS})
   endif()
@@ -196,7 +196,6 @@ macro(add_mcld_library name)
   target_link_libraries(${name} ${LLVM_USED_LIBS})
   llvm_config(${name} ${LLVM_LINK_COMPONENTS})
   target_link_libraries(${name} ${LLVM_COMMON_LIBS})
-  link_system_libs(${name})
 
   install(TARGETS ${name}
     LIBRARY DESTINATION lib${LLVM_LIBDIR_SUFFIX}
@@ -214,8 +213,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(BEFORE
   ${CMAKE_CURRENT_BINARY_DIR}/include
   ${CMAKE_CURRENT_SOURCE_DIR}/include
-  ${CMAKE_CURRENT_BINARY_DIR}/tools/ld.lite/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/tools/ld.lite/include
+  ${CMAKE_CURRENT_BINARY_DIR}/tools/ld.mcld/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/tools/ld.mcld/include
   )
 link_directories("${PATH_TO_LLVM_BUILD}/lib")
 

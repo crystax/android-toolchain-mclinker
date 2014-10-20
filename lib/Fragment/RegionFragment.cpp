@@ -8,21 +8,20 @@
 //===----------------------------------------------------------------------===//
 #include <mcld/Fragment/RegionFragment.h>
 
-using namespace mcld;
+namespace mcld {
 
 //===----------------------------------------------------------------------===//
 // RegionFragment
 //===----------------------------------------------------------------------===//
 RegionFragment::RegionFragment(llvm::StringRef pRegion, SectionData* pSD)
-  : Fragment(Fragment::Region, pSD), m_Region(pRegion) {
+    : Fragment(Fragment::Region, pSD), m_Region(pRegion) {
 }
 
-RegionFragment::~RegionFragment()
-{
+RegionFragment::~RegionFragment() {
 }
 
-size_t RegionFragment::size() const
-{
+size_t RegionFragment::size() const {
   return m_Region.size();
 }
 
+}  // namespace mcld

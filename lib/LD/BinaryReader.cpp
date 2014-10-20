@@ -8,12 +8,12 @@
 //===----------------------------------------------------------------------===//
 #include <mcld/LD/BinaryReader.h>
 
-using namespace mcld;
+namespace mcld {
 
 //===----------------------------------------------------------------------===//
 // BinaryReader
 //===----------------------------------------------------------------------===//
-BinaryReader::~BinaryReader()
-{
+BinaryReader::~BinaryReader() {
 }
 
+}  // namespace mcld

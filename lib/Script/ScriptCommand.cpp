@@ -8,12 +8,12 @@
 //===----------------------------------------------------------------------===//
 #include <mcld/Script/ScriptCommand.h>
 
-using namespace mcld;
+namespace mcld {
 
 //===----------------------------------------------------------------------===//
 // ScriptCommand
 //===----------------------------------------------------------------------===//
-ScriptCommand::~ScriptCommand()
-{
+ScriptCommand::~ScriptCommand() {
 }
 
+}  // namespace mcld

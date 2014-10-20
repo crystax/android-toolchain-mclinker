@@ -56,27 +56,18 @@ AC_DEFUN([CHECK_LLVM],
 	dnl   3. the flags - cflags, cxxflags, cppflags, ldflags
 	dnl   4. the libs
 	AC_MSG_CHECKING(for llvm - version >= $1)
-	cur_version="`${LLVM_CONFIG_BIN} --version`";
-	tool_major="`${LLVM_CONFIG_BIN} --version | sed 's/svn//' | sed 's/\([[0-9]]*\).\([[0-9]]*\)/\1/'`"
-	tool_minor="`${LLVM_CONFIG_BIN} --version | sed 's/svn//'| sed 's/\([[0-9]]*\).\([[0-9]]*\)/\2/'`"
-
-	require_major="`echo $1 | sed 's/svn//' | sed 's/\([[0-9]]*\).\([[0-9]]*\)/\1/'`"
-	require_minor="`echo $1 | sed 's/svn//' | sed 's/\([[0-9]]*\).\([[0-9]]*\)/\2/'`"
-
-	if test "${tool_major}" -lt "${require_major}"; then
+	cur_version="`${LLVM_CONFIG_BIN} --version | sed 's/svn//'`";
+	AS_VERSION_COMPARE(cur_version, [$1], [ver_check=-1], [ver_check=0], [ver_check=1])
+	if test $ver_check -lt 0; then
 		AC_MSG_RESULT([no])
 		AC_MSG_ERROR([*** The version of LLVM is too low! (${cur_version}<$1)])
-	elif test "${tool_major}" -eq "${require_major}"; then
-		if test "${tool_minor}" -lt "${require_minor}"; then
-			AC_MSG_RESULT([no])
-			AC_MSG_ERROR([*** The version of LLVM is too low! (${cur_version}<$1)])
-		fi
 	fi
 	AC_MSG_RESULT([yes])
 
 	LLVM_CFLAGS="`${LLVM_CONFIG_BIN} --cflags`"
 	LLVM_CPPFLAGS="`${LLVM_CONFIG_BIN} --cxxflags`"
 	LLVM_LDFLAGS="`${LLVM_CONFIG_BIN} --libs`"
+	LLVM_LDFLAGS="${LLVM_LDFLAGS} `${LLVM_CONFIG_BIN} --system-libs`"
 	if test -n "${LLVM_SHARED_LIB}" -a -f "${LLVM_SHARED_LIB}"; then
 		# Use libLLVM.so instead of lots libLLVM*.a
 		LLVM_LDFLAGS="${LLVM_SHARED_LIB} `${LLVM_CONFIG_BIN} --ldflags`"

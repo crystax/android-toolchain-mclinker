@@ -6,24 +6,16 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef MCLD_LD_DIAGNOSTICLINEINFO_H
-#define MCLD_LD_DIAGNOSTICLINEINFO_H
-#ifdef ENABLE_UNITTEST
-#include <gtest.h>
-#endif
+#ifndef MCLD_LD_DIAGNOSTICLINEINFO_H_
+#define MCLD_LD_DIAGNOSTICLINEINFO_H_
 
-namespace mcld
-{
+namespace mcld {
 
 /** \class DiagnosticLineInfo
  *  \brief Map the address to the line of code.
  */
-class DiagnosticLineInfo
-{
+class DiagnosticLineInfo {};
 
-};
+}  // namespace mcld
 
-} // namespace of mcld
-
-#endif
-
+#endif  // MCLD_LD_DIAGNOSTICLINEINFO_H_

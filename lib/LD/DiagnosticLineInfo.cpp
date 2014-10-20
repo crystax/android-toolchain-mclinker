@@ -8,8 +8,9 @@
 //===----------------------------------------------------------------------===//
 #include <mcld/LD/DiagnosticLineInfo.h>
 
-using namespace mcld;
+namespace mcld {
 
 //==========================
 // DiagnosticLineInfo
 
+}  // namespace mcld

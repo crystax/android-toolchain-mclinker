@@ -6,26 +6,19 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef MCLD_TARGET_DARWINLDBACKEND_H
-#define MCLD_TARGET_DARWINLDBACKEND_H
-#ifdef ENABLE_UNITTEST
-#include <gtest.h>
-#endif
+#ifndef MCLD_TARGET_DARWINLDBACKEND_H_
+#define MCLD_TARGET_DARWINLDBACKEND_H_
 
-namespace mcld
-{
+namespace mcld {
 
 /** \class DarwinLDBackend
- *  \brief DarwinLDBackend provides a common interface for all Darwin OS LDBackend.
+ *  \brief DarwinLDBackend provides a common interface for all Darwin OS
+ *         LDBackend.
  *
  *  \see
  */
-class DarwinLDBackend
-{
+class DarwinLDBackend {};
 
-};
+}  // namespace mcld
 
-} // namespace of mcld
-
-#endif
-
+#endif  // MCLD_TARGET_DARWINLDBACKEND_H_

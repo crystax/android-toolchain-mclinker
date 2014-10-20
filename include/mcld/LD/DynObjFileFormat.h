@@ -6,24 +6,16 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef MCLD_LD_DYNOBJFILEFORMAT_H
-#define MCLD_LD_DYNOBJFILEFORMAT_H
-#ifdef ENABLE_UNITTEST
-#include <gtest.h>
-#endif
+#ifndef MCLD_LD_DYNOBJFILEFORMAT_H_
+#define MCLD_LD_DYNOBJFILEFORMAT_H_
 
-namespace mcld
-{
+namespace mcld {
 
 /** \class DynObjFormat
  *  \brief DynObjFormat describes the file format for dynamic objects.
  */
-class DynObjFormat : public LDFileFormat
-{
+class DynObjFormat : public LDFileFormat {};
 
-};
+}  // namespace mcld
 
-} // namespace of mcld
-
-#endif
-
+#endif  // MCLD_LD_DYNOBJFILEFORMAT_H_

@@ -27,17 +27,18 @@ dnl input objects into output. This needs to be done early because
 dnl following tests depend on it.
 AC_CANONICAL_TARGET
 
-AM_INIT_AUTOMAKE([1.9 dist-bzip2 foreign])
+AM_INIT_AUTOMAKE([1.9 dist-bzip2 foreign subdir-objects silent-rules])
+
+AM_SILENT_RULES([yes])
 
 ####################
 #  Versioning, see VERSION
 MAJOR=2
-MINOR=8
+MINOR=9
 MICRO=0
-AGE=dev
-BUILD=
+BUILD=dev
 
-DEV_VERSION=$MAJOR.$MINOR.$MICRO.$AGE-$BUILD
+DEV_VERSION=$MAJOR.$MINOR.$MICRO-$BUILD
 PKG_VERSION=$MAJOR.$MINOR.$MICRO-$BUILD
 MCLD_VERSION=$DEV_VERSION
 AC_SUBST(MCLD_VERSION)
@@ -108,21 +109,20 @@ AC_SUBST(PTHREAD_CFLAGS)
 AC_SUBST(PTHREAD_LIBS)
 
 ####################
-# Configure Unit-test
-AC_ARG_ENABLE(unittest,
-            [AS_HELP_STRING([--enable-unittest],
+# Configure optimized build
+AC_ARG_ENABLE(optimized,
+            [AS_HELP_STRING([--enable-optimized],
                 [turn on unit-tests (default is no)])],
             [case "${enableval}" in
-              yes) unittest=true ;;
-              no)  unittest=false ;;
-              *) AC_MSG_ERROR(bad value ${enableval} for --enable-unittest) ;;
+              yes) optimized=true ;;
+              no)  optimized=false ;;
+              *) AC_MSG_ERROR(bad value ${enableval} for --enable-optimized) ;;
              esac],
-             [unittest=false])
-AM_CONDITIONAL([ENABLE_UNITTEST],[test "x${unittest}" == "xtrue" ])
+             [optimized=false])
+AM_CONDITIONAL([ENABLE_OPTIMIZED],[test "x${optimized}" == "xtrue" ])
 
 ####################
 # Configure compiler warnings
-CHECK_WERROR_FLAGS
 AC_MSG_CHECKING([for optional compiler flags])
 CXX_FLAG_CHECK(NO_VARIADIC_MACROS, [-Wno-variadic-macros])
 CXX_FLAG_CHECK(NO_COVERED_SWITCH_DEFAULT, [-Wno-covered-switch-default])
@@ -134,10 +134,11 @@ AC_MSG_RESULT([$NO_VARIADIC_MACROS $NO_COVERED_SWITCH_DEFAULT $NO_C99_EXTENSIONS
 AC_CHECK_HEADERS([fcntl.h unistd.h])
 AC_CHECK_HEADERS([sys/mman.h])
 AC_CHECK_HEADERS([cxxabi.h])
+AC_CHECK_HEADERS([zlib.h])
 
 ####################
 # Configure LLVM
-CHECK_LLVM([3.4])
+CHECK_LLVM([3.6])
 ENUM_MCLD_TARGETS
 CHECK_ALONE_TARGET
 
@@ -174,15 +175,15 @@ AH_BOTTOM([
 AC_CONFIG_FILES([VERSION])
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([include/Makefile])
-AC_CONFIG_FILES([debug/Makefile])
-AC_CONFIG_FILES([optimized/Makefile])
+AC_CONFIG_FILES([lib/Makefile])
 AC_CONFIG_FILES([utils/Makefile])
 AC_CONFIG_FILES([utils/gtest/Makefile])
-AC_CONFIG_FILES([utils/gtest/obj/Makefile])
+AC_CONFIG_FILES([utils/gtestmain/Makefile])
+AC_CONFIG_FILES([utils/zlib/Makefile])
+AC_CONFIG_FILES([unittests/Makefile])
 AC_CONFIG_FILES([include/mcld/Config/Targets.def])
 AC_CONFIG_FILES([include/mcld/Config/Linkers.def])
 AC_CONFIG_FILES([tools/Makefile])
-AC_CONFIG_FILES([tools/lite/Makefile])
 AC_CONFIG_FILES([tools/mcld/Makefile])
 AC_CONFIG_FILES([test/Makefile])
 

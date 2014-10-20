@@ -13,39 +13,32 @@
 
 #include <llvm/Support/Casting.h>
 
-using namespace mcld;
+namespace mcld {
 
 //===----------------------------------------------------------------------===//
 // X86_32GOT
 //===----------------------------------------------------------------------===//
-X86_32GOT::X86_32GOT(LDSection& pSection)
-  : GOT(pSection)
-{
+X86_32GOT::X86_32GOT(LDSection& pSection) : GOT(pSection) {
 }
 
-X86_32GOT::~X86_32GOT()
-{
+X86_32GOT::~X86_32GOT() {
 }
 
-X86_32GOTEntry* X86_32GOT::create()
-{
+X86_32GOTEntry* X86_32GOT::create() {
   return new X86_32GOTEntry(0, m_SectionData);
 }
 
 //===----------------------------------------------------------------------===//
 // X86_64GOT
 //===----------------------------------------------------------------------===//
-X86_64GOT::X86_64GOT(LDSection& pSection)
-  : GOT(pSection), m_pLast(NULL)
-{
+X86_64GOT::X86_64GOT(LDSection& pSection) : GOT(pSection) {
 }
 
-X86_64GOT::~X86_64GOT()
-{
+X86_64GOT::~X86_64GOT() {
 }
 
-X86_64GOTEntry* X86_64GOT::create()
-{
+X86_64GOTEntry* X86_64GOT::create() {
   return new X86_64GOTEntry(0, m_SectionData);
 }
 
+}  // namespace mcld

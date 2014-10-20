@@ -6,14 +6,11 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef TARGET_ARM_ARMGOT_H
-#define TARGET_ARM_ARMGOT_H
-#ifdef ENABLE_UNITTEST
-#include <gtest.h>
-#endif
+#ifndef TARGET_ARM_ARMGOT_H_
+#define TARGET_ARM_ARMGOT_H_
 
-#include <mcld/Target/GOT.h>
 #include <mcld/Support/MemoryRegion.h>
+#include <mcld/Target/GOT.h>
 #include <llvm/ADT/DenseMap.h>
 #include <vector>
 
@@ -24,12 +21,10 @@ class LDSection;
 /** \class ARMGOTEntry
  *  \brief GOT Entry with size of 4 bytes
  */
-class ARMGOTEntry : public GOT::Entry<4>
-{
-public:
+class ARMGOTEntry : public GOT::Entry<4> {
+ public:
   ARMGOTEntry(uint64_t pContent, SectionData* pParent)
-   : GOT::Entry<4>(pContent, pParent)
-  {}
+      : GOT::Entry<4>(pContent, pParent) {}
 };
 
 /** \class ARMGOT
@@ -49,10 +44,9 @@ public:
  *            +--------------+
  *
  */
-class ARMGOT : public GOT
-{
-public:
-  ARMGOT(LDSection &pSection);
+class ARMGOT : public GOT {
+ public:
+  explicit ARMGOT(LDSection& pSection);
 
   ~ARMGOT();
 
@@ -69,12 +63,12 @@ public:
 
   bool hasGOT1() const;
 
-private:
+ private:
   typedef std::vector<ARMGOTEntry*> EntryListType;
   typedef EntryListType::iterator entry_iterator;
   typedef EntryListType::const_iterator const_entry_iterator;
 
-private:
+ private:
   ARMGOTEntry* m_pGOTPLTFront;
   ARMGOTEntry* m_pGOTFront;
 
@@ -85,7 +79,6 @@ private:
   EntryListType m_GOT;
 };
 
-} // namespace of mcld
+}  // namespace mcld
 
-#endif
-
+#endif  // TARGET_ARM_ARMGOT_H_
