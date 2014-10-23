@@ -140,7 +140,10 @@ AC_DEFUN([CHECK_LLVM],
 				llvm_cv_platform_type="Win32" ;;
 			*-*-mingw*)
 				llvm_cv_os_type="MingW"
-				llvm_cv_platform_type="Win32" ;;
+				llvm_cv_platform_type="Win32"
+                                # mingw does't need -fPIC
+                                LLVM_CFLAGS="`echo ${LLVM_CFLAGS} | sed 's/-fPIC//g'`"
+                                LLVM_CPPFLAGS="`echo ${LLVM_CPPFLAGS} | sed 's/-fPIC//g'`" ;;
 			*-*-haiku*)
 				llvm_cv_os_type="Haiku"
 				llvm_cv_platform_type="Unix" ;;
