@@ -6,6 +6,11 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
+
+#ifdef __clang__
+#pragma clang diagnostic ignored "-Wsign-compare"
+#endif
+
 #include "ELFReaderTest.h"
 
 #include <mcld/IRBuilder.h>

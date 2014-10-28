@@ -10,6 +10,10 @@
 %{
 /* C/C++ Declarations */
 
+#ifdef __clang__
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+#endif
+
 #include <mcld/Script/ScriptScanner.h>
 #include <mcld/Script/ScriptFile.h>
 #include <mcld/Support/MsgHandling.h>
