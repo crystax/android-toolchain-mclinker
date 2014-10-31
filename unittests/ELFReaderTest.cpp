@@ -11,6 +11,10 @@
 #pragma clang diagnostic ignored "-Wsign-compare"
 #endif
 
+#ifdef __GNUC__
+#pragma GCC diagnostic ignored "-Wsign-compare"
+#endif
+
 #include "ELFReaderTest.h"
 
 #include <mcld/IRBuilder.h>
