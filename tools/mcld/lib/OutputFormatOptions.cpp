@@ -175,6 +175,12 @@ llvm::cl::opt<bool> ArgNoWarnMismatch(
     llvm::cl::ZeroOrMore,
     llvm::cl::init(false));
 
+llvm::cl::opt<bool> ArgFixCortexA53Errata835769(
+    "fix-cortex-a53-835769",
+    llvm::cl::desc("Fix AArch64 A53 Errata 835769."),
+    llvm::cl::ZeroOrMore,
+    llvm::cl::init(false));
+
 // Not supported yet {
 llvm::cl::opt<bool> ArgExportDynamic(
     "export-dynamic",
