@@ -170,7 +170,7 @@ mcld::sys::fs::PathCache::entry_type* bring_one_into_cache(DirIterator& pIter) {
     path += std::string(FindFileData.cFileName);
     entry = pIter.m_pParent->m_Cache.insert(path, exist);
     if (!exist)
-      entry->setValue(sys::fs::Path(path));
+      entry->setValue(path);
   } else if (ERROR_NO_MORE_FILES == GetLastError()) {
     // meet real end
     pIter.m_pParent->m_CacheFull = true;
