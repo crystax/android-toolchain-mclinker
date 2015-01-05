@@ -18,9 +18,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
-#ifdef __APPLE__
-#include <sys/syslimits.h>  // to get PATH_MAX
-#endif
 #include <unistd.h>
 
 namespace mcld {
